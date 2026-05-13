@@ -4,11 +4,14 @@ import React, { useState, useEffect } from "react";
 import { X, MapPin, Check, Crosshair } from "lucide-react";
 import dynamic from "next/dynamic";
 
-// Dynamically import Leaflet components to avoid SSR errors
-const MapContainer = dynamic(() => import("react-leaflet").then((mod) => mod.MapContainer), { ssr: false });
-const TileLayer = dynamic(() => import("react-leaflet").then((mod) => mod.TileLayer), { ssr: false });
-const useMapEvents = dynamic(() => import("react-leaflet").then((mod) => mod.useMapEvents), { ssr: false });
-const useMap = dynamic(() => import("react-leaflet").then((mod) => mod.useMap), { ssr: false });
+const MapComponent = dynamic(() => import("./MapComponent"), { 
+  ssr: false,
+  loading: () => (
+    <div className="flex items-center justify-center h-full w-full bg-gray-50">
+      <p className="text-sm text-muted animate-pulse">Loading Map...</p>
+    </div>
+  )
+});
 
 interface LocationPickerModalProps {
   isOpen: boolean;
@@ -16,26 +19,6 @@ interface LocationPickerModalProps {
   onConfirm: (lat: string, lng: string) => void;
   initialLat?: string;
   initialLng?: string;
-}
-
-// Internal component to handle map events
-function MapEventsHandler({ onCenterChange }: { onCenterChange: (lat: number, lng: number) => void }) {
-  const mapEvents = useMapEvents({
-    moveend: () => {
-      const center = mapEvents.getCenter();
-      onCenterChange(center.lat, center.lng);
-    },
-  });
-  return null;
-}
-
-// Component to handle programmatic map movement
-function RecenterMap({ lat, lng }: { lat: number; lng: number }) {
-  const map = useMap();
-  useEffect(() => {
-    if (map) map.setView([lat, lng]);
-  }, [lat, lng, map]);
-  return null;
 }
 
 export default function LocationPickerModal({
@@ -49,6 +32,11 @@ export default function LocationPickerModal({
     lat: parseFloat(initialLat || "11.2588"),
     lng: parseFloat(initialLng || "75.7804")
   });
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Reset to initial when opened OR ask for location if not set
   useEffect(() => {
@@ -74,7 +62,7 @@ export default function LocationPickerModal({
     }
   }, [isOpen, initialLat, initialLng]);
 
-  if (!isOpen) return null;
+  if (!isOpen || !mounted) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
@@ -99,18 +87,10 @@ export default function LocationPickerModal({
         <div className="relative flex-1 min-h-[400px] bg-gray-50">
           {/* Leaflet Map */}
           <div className="absolute inset-0">
-            <MapContainer 
-              center={[coords.lat, coords.lng]} 
-              zoom={15} 
-              style={{ height: "100%", width: "100%" }}
-            >
-              <TileLayer
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              />
-              <MapEventsHandler onCenterChange={(lat, lng) => setCoords({ lat, lng })} />
-              <RecenterMap lat={coords.lat} lng={coords.lng} />
-            </MapContainer>
+            <MapComponent 
+              center={coords}
+              onCenterChange={(lat, lng) => setCoords({ lat, lng })}
+            />
           </div>
 
           {/* Fixed Central Pin Overlay */}

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { 
   ArrowLeft, 
@@ -28,7 +28,21 @@ export default function NewStorePage() {
   const [error, setError] = useState("");
 
   // Fail-safe to ensure scroll is restored if Cloudinary widget leaves it stuck
-  React.useEffect(() => {
+  useEffect(() => {
+    // Request location on load to pre-fill coordinates
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          setFormData(prev => ({
+            ...prev,
+            latitude: pos.coords.latitude.toString(),
+            longitude: pos.coords.longitude.toString()
+          }));
+        },
+        (err) => console.warn("Initial location request denied or failed", err)
+      );
+    }
+
     return () => {
       document.body.style.overflow = "auto";
     };
