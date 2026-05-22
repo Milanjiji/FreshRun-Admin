@@ -181,7 +181,7 @@ export default function NewStorePage() {
       </div>
 
       {error && (
-        <div className="flex items-center gap-3 rounded-xl bg-red-50 p-4 text-red-600 border border-red-100">
+        <div className="flex items-center gap-3 rounded-xl bg-red-500/10 p-4 text-red-500 border border-red-500/20">
           <AlertCircle size={20} />
           <p className="text-sm font-medium">{error}</p>
         </div>
@@ -191,7 +191,7 @@ export default function NewStorePage() {
         {/* Left Column: Store Details */}
         <div className="lg:col-span-2 space-y-8">
           {/* Section 1: Basic Info */}
-          <div className="rounded-2xl bg-white p-6 border border-border shadow-sm space-y-6">
+          <div className="rounded-2xl bg-surface p-6 border border-border shadow-sm space-y-6">
             <div className="flex items-center gap-2 text-primary">
               <Store size={20} />
               <h3 className="font-bold text-foreground uppercase tracking-wider text-xs">Store Basic Details</h3>
@@ -309,7 +309,7 @@ export default function NewStorePage() {
           </div>
 
           {/* Section 2: Store Contact & Location */}
-          <div className="rounded-2xl bg-white p-6 border border-border shadow-sm space-y-6">
+          <div className="rounded-2xl bg-surface p-6 border border-border shadow-sm space-y-6">
             <div className="flex items-center gap-2 text-primary">
               <MapPin size={20} />
               <h3 className="font-bold text-foreground uppercase tracking-wider text-xs">Store Location & Contact</h3>
@@ -457,7 +457,7 @@ export default function NewStorePage() {
                       value={formData.latitude}
                       onChange={handleChange}
                       placeholder="Latitude"
-                      className="w-full rounded-xl border border-border bg-gray-50 px-4 py-3 text-xs outline-none focus:border-primary transition-all text-center"
+                      className="w-full rounded-xl border border-border bg-background px-4 py-3 text-xs outline-none focus:border-primary text-foreground transition-all text-center"
                       readOnly
                     />
                   </div>
@@ -468,7 +468,7 @@ export default function NewStorePage() {
                       value={formData.longitude}
                       onChange={handleChange}
                       placeholder="Longitude"
-                      className="w-full rounded-xl border border-border bg-gray-50 px-4 py-3 text-xs outline-none focus:border-primary transition-all text-center"
+                      className="w-full rounded-xl border border-border bg-background px-4 py-3 text-xs outline-none focus:border-primary text-foreground transition-all text-center"
                       readOnly
                     />
                   </div>
@@ -481,7 +481,7 @@ export default function NewStorePage() {
 
         {/* Right Column: Owner Details */}
         <div className="space-y-8">
-          <div className="rounded-2xl bg-white p-6 border border-border shadow-sm space-y-6 sticky top-24">
+          <div className="rounded-2xl bg-surface p-6 border border-border shadow-sm space-y-6 sticky top-24">
             <div className="flex items-center gap-2 text-primary">
               <User size={20} />
               <h3 className="font-bold text-foreground uppercase tracking-wider text-xs">Owner Information</h3>

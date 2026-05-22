@@ -36,7 +36,7 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="fixed left-0 top-0 z-40 h-screen w-64 border-r border-border bg-white transition-transform">
+    <aside className="fixed left-0 top-0 z-40 h-screen w-64 border-r border-border bg-surface transition-transform">
       <div className="flex h-full flex-col px-4 py-6">
         {/* Logo Section */}
         <div className="mb-10 flex items-center gap-3 px-2">
@@ -65,7 +65,7 @@ export default function Sidebar() {
               <span className="text-[10px] text-muted">Super Admin</span>
             </div>
           </div>
-          <ChevronRight className="h-4 w-4 text-slate-400" />
+          <ChevronRight className="h-4 w-4 text-muted" />
         </div>
 
         {/* Navigation */}
@@ -80,7 +80,7 @@ export default function Sidebar() {
                   "group flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200",
                   isActive 
                     ? "bg-primary text-white shadow-lg shadow-primary/30" 
-                    : "text-slate-600 hover:bg-slate-100 hover:text-primary"
+                    : "text-muted hover:bg-background hover:text-primary"
                 )}
               >
                 <div className="flex items-center gap-3">
@@ -98,7 +98,7 @@ export default function Sidebar() {
 
         {/* Bottom Section */}
         <div className="mt-auto border-t border-border pt-4">
-          <button className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-red-500 hover:bg-red-50 transition-colors">
+          <button className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-red-500 hover:bg-red-500/10 transition-colors">
             <LogOut className="h-5 w-5" />
             Logout
           </button>

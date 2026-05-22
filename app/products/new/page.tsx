@@ -186,7 +186,7 @@ export default function NewProductPage() {
       </div>
 
       {error && (
-        <div className="flex items-center gap-3 rounded-xl bg-red-50 p-4 text-red-600 border border-red-100">
+        <div className="flex items-center gap-3 rounded-xl bg-red-500/10 p-4 text-red-500 border border-red-500/20">
           <AlertCircle size={20} />
           <p className="text-sm font-medium">{error}</p>
         </div>
@@ -196,7 +196,7 @@ export default function NewProductPage() {
         {/* Left Column: Product Details */}
         <div className="lg:col-span-2 space-y-8">
           {/* Section 1: Basic Info */}
-          <div className="rounded-2xl bg-white p-6 border border-border shadow-sm space-y-6">
+          <div className="rounded-2xl bg-surface p-6 border border-border shadow-sm space-y-6">
             <div className="flex items-center gap-2 text-primary">
               <Package size={20} />
               <h3 className="font-bold text-foreground uppercase tracking-wider text-xs">Product Details</h3>
@@ -305,7 +305,7 @@ export default function NewProductPage() {
           </div>
 
           {/* Section 2: Pricing & Inventory */}
-          <div className="rounded-2xl bg-white p-6 border border-border shadow-sm space-y-6">
+          <div className="rounded-2xl bg-surface p-6 border border-border shadow-sm space-y-6">
             <div className="flex items-center gap-2 text-primary">
               <IndianRupee size={20} />
               <h3 className="font-bold text-foreground uppercase tracking-wider text-xs">Pricing & Inventory</h3>
@@ -391,7 +391,7 @@ export default function NewProductPage() {
 
         {/* Right Column: Image Upload */}
         <div className="space-y-8">
-          <div className="rounded-2xl bg-white p-6 border border-border shadow-sm space-y-6 sticky top-24">
+          <div className="rounded-2xl bg-surface p-6 border border-border shadow-sm space-y-6 sticky top-24">
             <div className="flex items-center gap-2 text-primary">
               <ImageIcon size={20} />
               <h3 className="font-bold text-foreground uppercase tracking-wider text-xs">Product Image</h3>

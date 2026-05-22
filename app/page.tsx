@@ -19,7 +19,7 @@ export default function Dashboard() {
           <p className="text-sm text-muted">Welcome back, here's what's happening with FreshRun today.</p>
         </div>
         <div className="flex gap-4">
-          <button className="flex items-center gap-2 rounded-xl bg-white border border-primary text-primary px-5 py-2.5 text-sm font-semibold shadow-sm hover:bg-primary/5 transition-all">
+          <button className="flex items-center gap-2 rounded-xl bg-surface border border-primary text-primary px-5 py-2.5 text-sm font-semibold shadow-sm hover:bg-primary/5 transition-all">
             <Plus className="h-4 w-4" />
             List New Store
           </button>
@@ -82,7 +82,7 @@ export default function Dashboard() {
 
       {/* Secondary Grid Section */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-2 h-[400px] rounded-2xl bg-white border border-border p-6 shadow-sm">
+        <div className="lg:col-span-2 h-[400px] rounded-2xl bg-surface border border-border p-6 shadow-sm">
           <div className="flex items-center justify-between mb-6">
             <h3 className="font-bold text-foreground">Sales Analytics</h3>
             <div className="flex gap-2">
@@ -95,7 +95,7 @@ export default function Dashboard() {
           </div>
         </div>
         
-        <div className="h-[400px] rounded-2xl bg-white border border-border p-6 shadow-sm">
+        <div className="h-[400px] rounded-2xl bg-surface border border-border p-6 shadow-sm">
           <h3 className="font-bold text-foreground mb-6">Recent Activities</h3>
           <div className="space-y-6">
             {[1, 2, 3, 4].map((i) => (
@@ -118,7 +118,7 @@ export default function Dashboard() {
 
 function StatCard({ title, value, trend, isUp, icon: Icon }: any) {
   return (
-    <div className="rounded-2xl bg-white p-6 border border-border shadow-sm hover:shadow-md transition-shadow">
+    <div className="rounded-2xl bg-surface p-6 border border-border shadow-sm hover:shadow-md transition-shadow">
       <div className="flex items-center justify-between mb-4">
         <div className="rounded-xl p-2.5 bg-primary/10 text-primary">
           <Icon size={20} />

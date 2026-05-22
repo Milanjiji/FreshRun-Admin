@@ -105,7 +105,7 @@ export default function UsersPage() {
           </div>
 
           {/* Filter & Search Bar */}
-          <div className="flex items-center gap-4 rounded-2xl bg-white p-4 border border-border shadow-sm">
+          <div className="flex items-center gap-4 rounded-2xl bg-surface p-4 border border-border shadow-sm">
             <div className="flex flex-1 items-center gap-2 rounded-xl bg-background px-4 py-2 border border-border focus-within:border-primary transition-all">
               <Search className="h-4 w-4 text-muted" />
               <input 
@@ -134,14 +134,14 @@ export default function UsersPage() {
 
           {/* Users Content Area */}
           {loading ? (
-            <div className="flex min-h-[400px] items-center justify-center rounded-3xl border border-border bg-white/50">
+            <div className="flex min-h-[400px] items-center justify-center rounded-3xl border border-border bg-surface/50">
               <div className="flex flex-col items-center gap-3">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
                 <p className="text-sm text-muted font-medium">Loading users...</p>
               </div>
             </div>
           ) : filteredUsers.length > 0 ? (
-            <div className="overflow-hidden rounded-3xl border border-border bg-white shadow-sm">
+            <div className="overflow-hidden rounded-3xl border border-border bg-surface shadow-sm">
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="border-b border-border bg-background/50">
@@ -186,9 +186,9 @@ export default function UsersPage() {
                       </td>
                       <td className="px-6 py-4">
                         <span className={`inline-flex items-center rounded-lg px-2.5 py-0.5 text-xs font-medium capitalize ${
-                          user.role === 'admin' ? 'bg-purple-100 text-purple-700' : 
-                          user.role === 'delivery' ? 'bg-blue-100 text-blue-700' : 
-                          'bg-green-100 text-green-700'
+                          user.role === 'admin' ? 'bg-purple-500/10 text-purple-600 dark:text-purple-400' : 
+                          user.role === 'delivery' ? 'bg-blue-500/10 text-blue-600 dark:text-blue-400' : 
+                          'bg-green-500/10 text-green-600 dark:text-green-400'
                         }`}>
                           {user.role}
                         </span>
@@ -213,7 +213,7 @@ export default function UsersPage() {
               </table>
             </div>
           ) : (
-            <div className="flex min-h-[400px] flex-col items-center justify-center rounded-3xl border-2 border-dashed border-border bg-white/50 p-12 text-center">
+            <div className="flex min-h-[400px] flex-col items-center justify-center rounded-3xl border-2 border-dashed border-border bg-surface/50 p-12 text-center">
               <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-primary/10 text-primary">
                 <Users size={40} />
               </div>
@@ -227,7 +227,7 @@ export default function UsersPage() {
 
         {/* Details Sidebar */}
         {selectedUser && (
-          <div className="w-[35%] bg-white rounded-3xl border border-border shadow-xl p-6 h-fit sticky top-8 animate-in slide-in-from-right duration-300">
+          <div className="w-[35%] bg-surface rounded-3xl border border-border shadow-xl p-6 h-fit sticky top-8 animate-in slide-in-from-right duration-300">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-bold font-mont">User Profile</h2>
               <button onClick={() => setSelectedUser(null)} className="p-2 hover:bg-background rounded-full transition-colors">
@@ -244,9 +244,9 @@ export default function UsersPage() {
                 <p className="text-xs text-muted font-mono uppercase mt-1">{selectedUser.id}</p>
                 <div className="mt-4 flex gap-2">
                    <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
-                      selectedUser.role === 'admin' ? 'bg-purple-100 text-purple-700' : 
-                      selectedUser.role === 'delivery' ? 'bg-blue-100 text-blue-700' : 
-                      'bg-green-100 text-green-700'
+                      selectedUser.role === 'admin' ? 'bg-purple-500/10 text-purple-600 dark:text-purple-400' : 
+                      selectedUser.role === 'delivery' ? 'bg-blue-500/10 text-blue-600 dark:text-blue-400' : 
+                      'bg-green-500/10 text-green-600 dark:text-green-400'
                    }`}>
                       {selectedUser.role}
                    </span>
@@ -262,7 +262,7 @@ export default function UsersPage() {
                 <h4 className="text-sm font-bold font-mont uppercase tracking-widest text-muted border-b border-border pb-2">Contact Details</h4>
                 <div className="grid grid-cols-1 gap-4">
                   <div className="flex items-center gap-3 p-3 rounded-xl bg-background border border-border">
-                    <div className="p-2 rounded-lg bg-white border border-border">
+                    <div className="p-2 rounded-lg bg-surface border border-border">
                       <Phone size={14} className="text-primary" />
                     </div>
                     <div>
@@ -271,7 +271,7 @@ export default function UsersPage() {
                     </div>
                   </div>
                   <div className="flex items-center gap-3 p-3 rounded-xl bg-background border border-border">
-                    <div className="p-2 rounded-lg bg-white border border-border">
+                    <div className="p-2 rounded-lg bg-surface border border-border">
                       <Mail size={14} className="text-primary" />
                     </div>
                     <div className="truncate">
@@ -300,7 +300,7 @@ export default function UsersPage() {
                     </div>
                   </div>
                   {selectedUser.deliveryMessage && (
-                    <div className="p-2 rounded-lg bg-white border border-border italic text-xs text-muted">
+                    <div className="p-2 rounded-lg bg-surface border border-border italic text-xs text-muted">
                       "{selectedUser.deliveryMessage}"
                     </div>
                   )}

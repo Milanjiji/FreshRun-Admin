@@ -47,7 +47,7 @@ export default function ProductsPage() {
       </div>
 
       {/* Filter & Search Bar */}
-      <div className="flex items-center gap-4 rounded-2xl bg-white p-4 border border-border shadow-sm">
+      <div className="flex items-center gap-4 rounded-2xl bg-surface p-4 border border-border shadow-sm">
         <div className="flex flex-1 items-center gap-2 rounded-xl bg-background px-4 py-2 border border-border focus-within:border-primary transition-all">
           <Search className="h-4 w-4 text-muted" />
           <input 
@@ -64,14 +64,14 @@ export default function ProductsPage() {
 
       {/* Products Content Area */}
       {loading ? (
-        <div className="flex min-h-[400px] items-center justify-center rounded-3xl border border-border bg-white/50">
+        <div className="flex min-h-[400px] items-center justify-center rounded-3xl border border-border bg-surface/50">
           <div className="flex flex-col items-center gap-3">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
             <p className="text-sm text-muted font-medium">Loading products...</p>
           </div>
         </div>
       ) : products.length > 0 ? (
-        <div className="overflow-hidden rounded-3xl border border-border bg-white shadow-sm">
+        <div className="overflow-hidden rounded-3xl border border-border bg-surface shadow-sm">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="border-b border-border bg-background/50">
@@ -96,7 +96,7 @@ export default function ProductsPage() {
                       </div>
                       <div>
                         <p className="font-bold text-foreground font-mont">{product.name}</p>
-                        <span className="inline-flex items-center rounded-md bg-indigo-50 px-1.5 py-0.5 text-[10px] font-bold text-indigo-600 uppercase tracking-wider">
+                        <span className="inline-flex items-center rounded-md bg-indigo-500/10 px-1.5 py-0.5 text-[10px] font-bold text-indigo-500 uppercase tracking-wider">
                           {product.category}
                         </span>
                       </div>
@@ -126,12 +126,12 @@ export default function ProductsPage() {
                   </td>
                   <td className="px-6 py-4">
                     {product.is_stock_out ? (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-bold text-red-600">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-red-500/10 px-2 py-0.5 text-[10px] font-bold text-red-500">
                         <AlertCircle size={10} />
                         STOCK OUT
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-bold text-green-600">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-green-500/10 px-2 py-0.5 text-[10px] font-bold text-green-500">
                         IN STOCK
                       </span>
                     )}
@@ -147,7 +147,7 @@ export default function ProductsPage() {
           </table>
         </div>
       ) : (
-        <div className="flex min-h-[400px] flex-col items-center justify-center rounded-3xl border-2 border-dashed border-border bg-white/50 p-12 text-center">
+        <div className="flex min-h-[400px] flex-col items-center justify-center rounded-3xl border-2 border-dashed border-border bg-surface/50 p-12 text-center">
           <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-primary/10 text-primary">
             <Package size={40} />
           </div>

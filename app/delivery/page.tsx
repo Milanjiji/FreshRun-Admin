@@ -64,31 +64,31 @@ export default function DeliverySettingsPage() {
   return (
     <div className="p-6 max-w-4xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-900 font-mont">Delivery Settings</h1>
-        <p className="text-slate-500 mt-1">Manage late night fees and standard delivery charges</p>
+        <h1 className="text-3xl font-bold text-foreground font-mont">Delivery Settings</h1>
+        <p className="text-muted mt-1">Manage late night fees and standard delivery charges</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Late Night Settings */}
-        <div className="bg-white rounded-3xl p-8 shadow-sm border border-slate-100">
+        <div className="bg-surface rounded-3xl p-8 shadow-sm border border-border">
           <div className="flex items-center gap-3 mb-6">
-            <div className="p-3 bg-indigo-50 rounded-2xl">
-              <Moon className="h-6 w-6 text-indigo-600" />
+            <div className="p-3 bg-indigo-500/10 rounded-2xl">
+              <Moon className="h-6 w-6 text-indigo-500" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-slate-900">Late Night Fees</h2>
-              <p className="text-sm text-slate-500">Apply extra charges during late hours</p>
+              <h2 className="text-xl font-bold text-foreground">Late Night Fees</h2>
+              <p className="text-sm text-muted">Apply extra charges during late hours</p>
             </div>
           </div>
 
           <div className="space-y-6">
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">Extra Fee (₹)</label>
+              <label className="block text-sm font-semibold text-muted mb-2">Extra Fee (₹)</label>
               <div className="relative">
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">₹</div>
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted/60">₹</div>
                 <input 
                   type="number"
-                  className="w-full pl-8 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                  className="w-full pl-8 pr-4 py-3 bg-background border border-border rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary text-foreground outline-none transition-all"
                   value={settings?.late_night_fee || 0}
                   onChange={(e) => setSettings({ ...settings, late_night_fee: parseFloat(e.target.value) })}
                 />
@@ -97,24 +97,24 @@ export default function DeliverySettingsPage() {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">Start Time</label>
+                <label className="block text-sm font-semibold text-muted mb-2">Start Time</label>
                 <div className="relative">
-                  <Clock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                  <Clock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted/60" />
                   <input 
                     type="time"
-                    className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                    className="w-full pl-10 pr-4 py-3 bg-background border border-border rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary text-foreground outline-none transition-all"
                     value={settings?.late_night_start || "23:00"}
                     onChange={(e) => setSettings({ ...settings, late_night_start: e.target.value })}
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">End Time</label>
+                <label className="block text-sm font-semibold text-muted mb-2">End Time</label>
                 <div className="relative">
-                  <Clock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                  <Clock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted/60" />
                   <input 
                     type="time"
-                    className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                    className="w-full pl-10 pr-4 py-3 bg-background border border-border rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary text-foreground outline-none transition-all"
                     value={settings?.late_night_end || "05:00"}
                     onChange={(e) => setSettings({ ...settings, late_night_end: e.target.value })}
                   />
@@ -122,9 +122,9 @@ export default function DeliverySettingsPage() {
               </div>
             </div>
 
-            <div className="p-4 bg-indigo-50/50 rounded-2xl border border-indigo-100 flex gap-3">
-              <Info className="h-5 w-5 text-indigo-600 shrink-0 mt-0.5" />
-              <p className="text-xs text-indigo-700 leading-relaxed">
+            <div className="p-4 bg-indigo-500/5 dark:bg-indigo-500/10 rounded-2xl border border-indigo-500/20 flex gap-3">
+              <Info className="h-5 w-5 text-indigo-500 shrink-0 mt-0.5" />
+              <p className="text-xs text-indigo-600 dark:text-indigo-400 leading-relaxed">
                 Fees will be automatically applied to the user's cart if the order is placed between these hours.
               </p>
             </div>
@@ -132,25 +132,25 @@ export default function DeliverySettingsPage() {
         </div>
 
         {/* Delivery Fee Settings */}
-        <div className="bg-white rounded-3xl p-8 shadow-sm border border-slate-100">
+        <div className="bg-surface rounded-3xl p-8 shadow-sm border border-border">
           <div className="flex items-center gap-3 mb-6">
             <div className="p-3 bg-primary/10 rounded-2xl">
               <Truck className="h-6 w-6 text-primary" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-slate-900">Standard Fees</h2>
-              <p className="text-sm text-slate-500">Minimum delivery charges and thresholds</p>
+              <h2 className="text-xl font-bold text-foreground">Standard Fees</h2>
+              <p className="text-sm text-muted">Minimum delivery charges and thresholds</p>
             </div>
           </div>
 
           <div className="space-y-6">
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">Min Delivery Fee (₹)</label>
+              <label className="block text-sm font-semibold text-muted mb-2">Min Delivery Fee (₹)</label>
               <div className="relative">
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">₹</div>
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted/60">₹</div>
                 <input 
                   type="number"
-                  className="w-full pl-8 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                  className="w-full pl-8 pr-4 py-3 bg-background border border-border rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary text-foreground outline-none transition-all"
                   value={settings?.min_delivery_fee || 0}
                   onChange={(e) => setSettings({ ...settings, min_delivery_fee: parseFloat(e.target.value) })}
                 />
@@ -158,20 +158,20 @@ export default function DeliverySettingsPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">Free Delivery Threshold (₹)</label>
+              <label className="block text-sm font-semibold text-muted mb-2">Free Delivery Threshold (₹)</label>
               <div className="relative">
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">₹</div>
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted/60">₹</div>
                 <input 
                   type="number"
-                  className="w-full pl-8 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                  className="w-full pl-8 pr-4 py-3 bg-background border border-border rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary text-foreground outline-none transition-all"
                   value={settings?.free_delivery_threshold || 0}
                   onChange={(e) => setSettings({ ...settings, free_delivery_threshold: parseFloat(e.target.value) })}
                 />
               </div>
-              <p className="text-[10px] text-slate-400 mt-2 px-1">Orders above this amount will have zero delivery fee.</p>
+              <p className="text-[10px] text-muted mt-2 px-1">Orders above this amount will have zero delivery fee.</p>
             </div>
 
-            <div className="mt-8 pt-6 border-t border-slate-100">
+            <div className="mt-8 pt-6 border-t border-border">
                <button 
                 onClick={handleSave}
                 disabled={saving}
@@ -187,7 +187,9 @@ export default function DeliverySettingsPage() {
 
       {message.text && (
         <div className={`mt-6 p-4 rounded-2xl text-center font-semibold transition-all ${
-          message.type === "success" ? "bg-green-50 text-green-700 border border-green-100" : "bg-red-50 text-red-700 border border-red-100"
+          message.type === "success" 
+            ? "bg-green-500/10 text-green-600 dark:text-green-400 border border-green-500/20" 
+            : "bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20"
         }`}>
           {message.text}
         </div>

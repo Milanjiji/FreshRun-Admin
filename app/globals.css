@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --primary: #60c547;
   --primary-dark: #4caf3a;
@@ -32,19 +34,22 @@
   --radius-xl: 1.5rem;
 }
 
-/* Force Light Mode */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #f9fbf9;
-    --foreground: #121812;
-    --surface: #ffffff;
-    --border: #e2e8e2;
-    --muted: #4b554b;
-  }
+.dark {
+  --background: #090d09;
+  --foreground: #e5ece5;
+  --surface: #101610;
+  --border: #212c20;
+  --muted: #8fa08e;
+  --primary-light: #122110;
+  --primary-dark: #76cf5b;
 }
 
 body {
   background-color: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
 }
+

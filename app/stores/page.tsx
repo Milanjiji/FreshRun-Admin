@@ -152,8 +152,8 @@ export default function StoresPage() {
     <div className="relative min-h-screen">
       {/* Global Processing Overlay */}
       {isProcessing && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-white/60 backdrop-blur-[2px] transition-all">
-          <div className="flex flex-col items-center gap-4 rounded-3xl bg-white p-8 shadow-2xl border border-border animate-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-surface/60 backdrop-blur-[2px] transition-all">
+          <div className="flex flex-col items-center gap-4 rounded-3xl bg-surface p-8 shadow-2xl border border-border animate-in zoom-in-95 duration-200">
             <div className="relative">
               <Loader2 className="h-10 w-10 animate-spin text-primary" />
               <div className="absolute inset-0 flex items-center justify-center">
@@ -183,7 +183,7 @@ export default function StoresPage() {
         </div>
 
         {/* Filter & Search Bar */}
-        <div className="flex items-center gap-4 rounded-2xl bg-white p-4 border border-border shadow-sm">
+        <div className="flex items-center gap-4 rounded-2xl bg-surface p-4 border border-border shadow-sm">
           <div className="flex flex-1 items-center gap-2 rounded-xl bg-background px-4 py-2 border border-border focus-within:border-primary transition-all">
             <Search className="h-4 w-4 text-muted" />
             <input 
@@ -200,14 +200,14 @@ export default function StoresPage() {
 
         {/* Stores Content Area */}
         {loading ? (
-          <div className="flex min-h-[400px] items-center justify-center rounded-3xl border border-border bg-white/50">
+          <div className="flex min-h-[400px] items-center justify-center rounded-3xl border border-border bg-surface/50">
             <div className="flex flex-col items-center gap-3">
               <Loader2 className="h-8 w-8 animate-spin text-primary" />
               <p className="text-sm text-muted font-medium">Loading your stores...</p>
             </div>
           </div>
         ) : stores.length > 0 ? (
-          <div className="overflow-hidden rounded-3xl border border-border bg-white shadow-sm">
+          <div className="overflow-hidden rounded-3xl border border-border bg-surface shadow-sm">
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="border-b border-border bg-background/50">
@@ -278,7 +278,7 @@ export default function StoresPage() {
             </table>
           </div>
         ) : (
-          <div className="flex min-h-[400px] flex-col items-center justify-center rounded-3xl border-2 border-dashed border-border bg-white/50 p-12 text-center">
+          <div className="flex min-h-[400px] flex-col items-center justify-center rounded-3xl border-2 border-dashed border-border bg-surface/50 p-12 text-center">
             <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-primary/10 text-primary">
               <Store size={40} />
             </div>
@@ -292,7 +292,7 @@ export default function StoresPage() {
 
       {/* Details Sidebar */}
       {selectedStore && (
-        <div className="w-[35%] bg-white rounded-3xl border border-border shadow-xl p-6 h-fit sticky top-8 animate-in slide-in-from-right duration-300">
+        <div className="w-[35%] bg-surface rounded-3xl border border-border shadow-xl p-6 h-fit sticky top-8 animate-in slide-in-from-right duration-300">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-lg font-bold font-mont">Store Details</h2>
             <button onClick={() => setSelectedStore(null)} className="p-2 hover:bg-background rounded-full transition-colors">
@@ -364,7 +364,7 @@ export default function StoresPage() {
                <button 
                   onClick={() => toggleAvailability(selectedStore.id, selectedStore.is_active)}
                   disabled={updatingId === selectedStore.id}
-                  className={`w-full py-3 rounded-xl font-bold text-sm transition-all ${selectedStore.is_active ? 'bg-red-50 text-red-600 border border-red-100 hover:bg-red-100' : 'bg-primary text-white shadow-lg shadow-primary/30 hover:bg-primary-dark'}`}
+                  className={`w-full py-3 rounded-xl font-bold text-sm transition-all ${selectedStore.is_active ? 'bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500/20' : 'bg-primary text-white shadow-lg shadow-primary/30 hover:bg-primary-dark'}`}
                >
                   {updatingId === selectedStore.id ? (
                     <Loader2 className="h-4 w-4 animate-spin mx-auto" />
@@ -386,7 +386,7 @@ export default function StoresPage() {
                   {products.map((product) => (
                     <div key={product.id} className="p-3 rounded-2xl border border-border bg-background/50 hover:bg-background transition-colors">
                       <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-lg overflow-hidden border border-border bg-white">
+                        <div className="h-10 w-10 rounded-lg overflow-hidden border border-border bg-surface">
                            {product.image_url ? (
                              <img src={product.image_url} alt={product.name} className="h-full w-full object-cover" />
                            ) : (
@@ -418,10 +418,10 @@ export default function StoresPage() {
                               type="number" 
                               value={product.stock_quantity}
                               onChange={(e) => updateProductStock(product.id, parseInt(e.target.value))}
-                              className="w-14 bg-white border border-border rounded-md px-1.5 py-0.5 text-xs font-bold outline-none focus:border-primary"
+                              className="w-14 bg-surface border border-border rounded-md px-1.5 py-0.5 text-xs font-bold outline-none focus:border-primary"
                            />
                         </div>
-                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${product.stock_quantity > 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${product.stock_quantity > 0 ? 'bg-green-500/10 text-green-600 dark:text-green-400' : 'bg-red-500/10 text-red-600 dark:text-red-400'}`}>
                            {product.stock_quantity > 0 ? 'In Stock' : 'Out of Stock'}
                         </span>
                       </div>

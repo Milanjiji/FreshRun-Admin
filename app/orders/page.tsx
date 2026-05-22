@@ -163,7 +163,7 @@ export default function OrdersPage() {
           </div>
 
           {/* Filter & Search Bar */}
-          <div className="flex items-center gap-4 rounded-2xl bg-white p-4 border border-border shadow-sm">
+          <div className="flex items-center gap-4 rounded-2xl bg-surface p-4 border border-border shadow-sm">
             <div className="flex flex-1 items-center gap-2 rounded-xl bg-background px-4 py-2 border border-border focus-within:border-primary transition-all">
               <Search className="h-4 w-4 text-muted" />
               <input 
@@ -194,14 +194,14 @@ export default function OrdersPage() {
 
           {/* Orders Content Area */}
           {loading ? (
-            <div className="flex min-h-[400px] items-center justify-center rounded-3xl border border-border bg-white/50">
+            <div className="flex min-h-[400px] items-center justify-center rounded-3xl border border-border bg-surface/50">
               <div className="flex flex-col items-center gap-3">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
                 <p className="text-sm text-muted font-medium">Loading orders...</p>
               </div>
             </div>
           ) : filteredOrders.length > 0 ? (
-            <div className="overflow-hidden rounded-3xl border border-border bg-white shadow-sm">
+            <div className="overflow-hidden rounded-3xl border border-border bg-surface shadow-sm">
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="border-b border-border bg-background/50">
@@ -241,10 +241,10 @@ export default function OrdersPage() {
                       </td>
                       <td className="px-6 py-4">
                         <span className={`inline-flex items-center rounded-lg px-2.5 py-0.5 text-xs font-medium capitalize ${
-                          order.status === 'delivered' ? 'bg-green-100 text-green-700' : 
-                          order.status === 'cancelled' ? 'bg-red-100 text-red-700' : 
-                          order.status === 'pending' ? 'bg-amber-100 text-amber-700' : 
-                          'bg-blue-100 text-blue-700'
+                          order.status === 'delivered' ? 'bg-green-500/10 text-green-600 dark:text-green-400' : 
+                          order.status === 'cancelled' ? 'bg-red-500/10 text-red-600 dark:text-red-400' : 
+                          order.status === 'pending' ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400' : 
+                          'bg-blue-500/10 text-blue-600 dark:text-blue-400'
                         }`}>
                           {order.status.replace('_', ' ')}
                         </span>
@@ -255,7 +255,7 @@ export default function OrdersPage() {
               </table>
             </div>
           ) : (
-            <div className="flex min-h-[400px] flex-col items-center justify-center rounded-3xl border-2 border-dashed border-border bg-white/50 p-12 text-center">
+            <div className="flex min-h-[400px] flex-col items-center justify-center rounded-3xl border-2 border-dashed border-border bg-surface/50 p-12 text-center">
               <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-primary/10 text-primary">
                 <ShoppingBag size={40} />
               </div>
@@ -269,7 +269,7 @@ export default function OrdersPage() {
 
         {/* Details Sidebar */}
         {selectedOrder && (
-          <div className="w-[35%] bg-white rounded-3xl border border-border shadow-xl p-6 h-fit sticky top-8 overflow-y-auto max-h-[90vh] animate-in slide-in-from-right duration-300">
+          <div className="w-[35%] bg-surface rounded-3xl border border-border shadow-xl p-6 h-fit sticky top-8 overflow-y-auto max-h-[90vh] animate-in slide-in-from-right duration-300">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-bold font-mont">Order Details</h2>
               <button onClick={() => setSelectedOrder(null)} className="p-2 hover:bg-background rounded-full transition-colors">
@@ -283,9 +283,9 @@ export default function OrdersPage() {
                   <div className="flex justify-between items-center mb-2">
                      <span className="font-mono font-bold text-sm">#{selectedOrder.id.split('-')[0].toUpperCase()}</span>
                      <span className={`inline-flex items-center rounded-lg px-2.5 py-0.5 text-xs font-medium capitalize ${
-                       selectedOrder.status === 'delivered' ? 'bg-green-100 text-green-700' : 
-                       selectedOrder.status === 'pending' ? 'bg-amber-100 text-amber-700' : 
-                       'bg-blue-100 text-blue-700'
+                       selectedOrder.status === 'delivered' ? 'bg-green-500/10 text-green-600 dark:text-green-400' : 
+                       selectedOrder.status === 'pending' ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400' : 
+                       'bg-blue-500/10 text-blue-600 dark:text-blue-400'
                      }`}>
                        {selectedOrder.status.replace('_', ' ')}
                      </span>
@@ -296,7 +296,7 @@ export default function OrdersPage() {
                   {localOrderState && (
                     <div className="space-y-3">
                        <h4 className="text-xs font-bold uppercase text-muted tracking-wider">Manage Order</h4>
-                       <div className="flex items-center justify-between p-2 bg-white rounded-lg border border-border">
+                       <div className="flex items-center justify-between p-2 bg-surface rounded-lg border border-border">
                           <span className="text-sm font-medium">Confirmed</span>
                           <input 
                             type="checkbox" 
@@ -305,7 +305,7 @@ export default function OrdersPage() {
                             className="w-4 h-4 text-primary"
                           />
                        </div>
-                       <div className="flex items-center justify-between p-2 bg-white rounded-lg border border-border">
+                       <div className="flex items-center justify-between p-2 bg-surface rounded-lg border border-border">
                           <span className="text-sm font-medium">Order Packed</span>
                           <input 
                             type="checkbox" 
@@ -314,7 +314,7 @@ export default function OrdersPage() {
                             className="w-4 h-4 text-primary"
                           />
                        </div>
-                       <div className="flex items-center justify-between p-2 bg-white rounded-lg border border-border">
+                       <div className="flex items-center justify-between p-2 bg-surface rounded-lg border border-border">
                           <span className="text-sm font-medium">Delivery Boy Opted</span>
                           <input 
                             type="checkbox" 
@@ -323,7 +323,7 @@ export default function OrdersPage() {
                             className="w-4 h-4 text-primary"
                           />
                        </div>
-                       <div className="flex items-center justify-between p-2 bg-white rounded-lg border border-border">
+                       <div className="flex items-center justify-between p-2 bg-surface rounded-lg border border-border">
                           <span className="text-sm font-medium">Completed / Delivered</span>
                           <input 
                             type="checkbox" 
@@ -345,7 +345,7 @@ export default function OrdersPage() {
                        <button 
                           onClick={() => updateOrderStatus(selectedOrder.id, { status: 'declined', is_completed: false })}
                           disabled={saving}
-                          className="w-full mt-2 py-2 bg-red-100 text-red-700 font-bold rounded-lg hover:bg-red-200 transition-colors flex items-center justify-center gap-2 disabled:opacity-70"
+                          className="w-full mt-2 py-2 bg-red-500/10 text-red-500 font-bold rounded-lg hover:bg-red-500/20 transition-colors flex items-center justify-center gap-2 disabled:opacity-70"
                        >
                           {saving ? <Loader2 size={16} className="animate-spin" /> : null}
                           Decline Order
@@ -373,16 +373,16 @@ export default function OrdersPage() {
                {/* Store Details */}
                <div className="space-y-3">
                  <h4 className="text-sm font-bold font-mont uppercase tracking-widest text-muted border-b border-border pb-2">Store Info</h4>
-                 <div className="flex gap-2 p-3 rounded-xl bg-amber-50 border border-amber-100">
-                    <ShoppingBag size={16} className="text-amber-600 mt-1" />
-                    <div>
-                       <p className="font-bold text-sm text-amber-900">{selectedOrder.store_name || 'Generic Store'}</p>
-                       <p className="text-[10px] font-mono text-amber-700 mt-0.5">ID: {selectedOrder.store_id}</p>
-                       {(selectedOrder.store_lat && selectedOrder.store_lng) && (
-                         <p className="text-[10px] text-amber-600 mt-1">Location: {selectedOrder.store_lat}, {selectedOrder.store_lng}</p>
-                       )}
-                    </div>
-                 </div>
+                  <div className="flex gap-2 p-3 rounded-xl bg-amber-500/5 dark:bg-amber-500/10 border border-amber-500/20">
+                     <ShoppingBag size={16} className="text-amber-600 dark:text-amber-400 mt-1" />
+                     <div>
+                        <p className="font-bold text-sm text-amber-800 dark:text-amber-300">{selectedOrder.store_name || 'Generic Store'}</p>
+                        <p className="text-[10px] font-mono text-amber-700 dark:text-amber-400 mt-0.5">ID: {selectedOrder.store_id}</p>
+                        {(selectedOrder.store_lat && selectedOrder.store_lng) && (
+                          <p className="text-[10px] text-amber-600 dark:text-amber-500 mt-1">Location: {selectedOrder.store_lat}, {selectedOrder.store_lng}</p>
+                        )}
+                     </div>
+                  </div>
                </div>
 
               {/* Delivery Address */}
