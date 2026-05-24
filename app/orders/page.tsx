@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import io from "socket.io-client";
 import { 
   ShoppingBag, 
   Search, 
@@ -51,6 +52,37 @@ export default function OrdersPage() {
   const [localOrderState, setLocalOrderState] = useState<any>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+
+  const socketRef = useRef<any>(null);
+
+  useEffect(() => {
+    const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
+    socketRef.current = io(baseUrl);
+
+    socketRef.current.on("connect", () => {
+      console.log("[Admin] Socket connected");
+      socketRef.current.emit("join_room", "admin");
+    });
+
+    socketRef.current.on("new_order", (newOrder: OrderData) => {
+      console.log("[Admin] New order received:", newOrder.id);
+      setOrders(prev => [newOrder, ...prev]);
+    });
+
+    socketRef.current.on("order_status_changed", (updatedOrder: OrderData) => {
+      console.log("[Admin] Order status changed:", updatedOrder.id, updatedOrder.status);
+      setOrders(prev => prev.map(o => o.id === updatedOrder.id ? updatedOrder : o));
+      if (selectedOrder?.id === updatedOrder.id) {
+        setSelectedOrder(updatedOrder);
+      }
+    });
+
+    return () => {
+      if (socketRef.current) {
+        socketRef.current.disconnect();
+      }
+    };
+  }, [selectedOrder?.id]);
 
   useEffect(() => {
     if (selectedOrder) {
