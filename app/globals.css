@@ -25,8 +25,8 @@
   --color-border: var(--border);
   --color-muted: var(--muted);
   
-  --font-sans: var(--font-inter);
-  --font-mont: var(--font-mont);
+  --font-sans: "Inter", "Segoe UI", Arial, sans-serif;
+  --font-mont: "Montserrat", "Avenir Next", "Segoe UI", Arial, sans-serif;
   
   --radius-sm: 0.5rem;
   --radius-md: 0.75rem;
@@ -52,4 +52,3 @@ body {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
 }
-

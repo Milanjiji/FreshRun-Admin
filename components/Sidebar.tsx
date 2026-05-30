@@ -13,7 +13,8 @@ import {
   Settings, 
   ChevronRight,
   LogOut,
-  Store
+  Store,
+  UserCheck
 } from "lucide-react";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -27,8 +28,9 @@ const navItems = [
   { label: "Stores", href: "/stores", icon: Store },
   { label: "Orders", href: "/orders", icon: ShoppingCart },
   { label: "Users", href: "/users", icon: Users },
+  { label: "Delivery Partners", href: "/delivery-partners", icon: UserCheck },
   { label: "Products", href: "/products", icon: Package },
-  { label: "Delivery", href: "/delivery", icon: Truck },
+  { label: "Delivery Settings", href: "/delivery", icon: Truck },
   { label: "Settings", href: "/settings", icon: Settings },
 ];
 

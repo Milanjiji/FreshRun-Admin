@@ -3,7 +3,8 @@
 import React, { useEffect } from "react";
 import { MapContainer, TileLayer, useMapEvents, useMap } from "react-leaflet";
 import L from "leaflet";
-import "leaflet/dist/leaflet.css";
+
+const LEAFLET_CSS_HREF = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
 
 // Fix for default marker icon in Leaflet
 const icon = L.icon({
@@ -36,6 +37,21 @@ function RecenterMap({ lat, lng }: { lat: number; lng: number }) {
 }
 
 export default function MapComponent({ center, onCenterChange }: MapComponentProps) {
+  useEffect(() => {
+    const existing = document.querySelector<HTMLLinkElement>(`link[data-leaflet-css="true"]`);
+    if (existing) return;
+
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = LEAFLET_CSS_HREF;
+    link.setAttribute("data-leaflet-css", "true");
+    document.head.appendChild(link);
+
+    return () => {
+      link.remove();
+    };
+  }, []);
+
   return (
     <MapContainer 
       center={[center.lat, center.lng]} 

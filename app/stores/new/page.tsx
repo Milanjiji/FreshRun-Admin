@@ -26,6 +26,7 @@ export default function NewStorePage() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
+  const isCloudinaryConfigured = Boolean(process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME);
 
   // Fail-safe to ensure scroll is restored if Cloudinary widget leaves it stuck
   useEffect(() => {
@@ -257,7 +258,7 @@ export default function NewStorePage() {
                         <X size={16} />
                       </button>
                     </div>
-                  ) : (
+                  ) : isCloudinaryConfigured ? (
                     <CldUploadWidget 
                       uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
                       onSuccess={(result: any) => {
@@ -290,6 +291,14 @@ export default function NewStorePage() {
                         );
                       }}
                     </CldUploadWidget>
+                  ) : (
+                    <div className="rounded-xl border border-dashed border-border bg-background p-5 text-center">
+                      <Upload size={24} className="mx-auto text-muted/60" />
+                      <p className="mt-3 text-sm font-semibold text-foreground">Image upload is not configured</p>
+                      <p className="mt-1 text-xs text-muted">
+                        Set <code className="font-mono">NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME</code> to enable uploads.
+                      </p>
+                    </div>
                   )}
                 </div>
               </div>
