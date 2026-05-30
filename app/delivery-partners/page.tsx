@@ -17,7 +17,8 @@ import {
   XCircle, 
   AlertCircle,
   Eye,
-  ZoomIn
+  ZoomIn,
+  Truck
 } from "lucide-react";
 
 interface DeliveryPartner {
