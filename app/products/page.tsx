@@ -2,33 +2,57 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { Plus, Package, Search, Filter, Loader2, Tag, Box, AlertCircle } from "lucide-react";
+import { Plus, Package, Search, Filter, Loader2, Tag, Box, AlertCircle, Trash2 } from "lucide-react";
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  const fetchProducts = async () => {
+    setLoading(true);
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
+      const response = await fetch(`${baseUrl}/products?include_inactive=true`);
+      const data = await response.json();
+      if (data.success) {
+        setProducts(data.data);
+      } else {
+        setError(data.error || "Failed to load products");
+      }
+    } catch (err) {
+      setError("Connection error. Could not reach backend.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
-        const response = await fetch(`${baseUrl}/products`);
-        const data = await response.json();
-        if (data.success) {
-          setProducts(data.data);
-        } else {
-          setError(data.error || "Failed to load products");
-        }
-      } catch (err) {
-        setError("Connection error. Could not reach backend.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchProducts();
   }, []);
+
+  const handleDelete = async (id: string, name: string) => {
+    if (!window.confirm(`Are you sure you want to delete "${name}"?`)) return;
+
+    setDeletingId(id);
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
+      const response = await fetch(`${baseUrl}/products/${id}`, {
+        method: 'DELETE',
+      });
+      const data = await response.json();
+      if (data.success) {
+        setProducts(prev => prev.filter(p => p.id !== id));
+      } else {
+        alert(data.error || "Failed to delete product");
+      }
+    } catch (err) {
+      alert("Connection error. Could not delete product.");
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   return (
     <div className="space-y-8">
@@ -137,9 +161,25 @@ export default function ProductsPage() {
                     )}
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <button className="px-3 py-1.5 rounded-lg border border-border text-xs font-bold text-muted hover:bg-background transition-all">
-                      Edit
-                    </button>
+                    <div className="flex justify-end gap-2">
+                      <Link href={`/products/${product.id}`}>
+                        <button className="px-3 py-1.5 rounded-lg border border-border text-xs font-bold text-muted hover:bg-background transition-all">
+                          Edit
+                        </button>
+                      </Link>
+                      <button 
+                        onClick={() => handleDelete(product.id, product.name)}
+                        disabled={deletingId === product.id}
+                        className="px-3 py-1.5 rounded-lg border border-red-500/20 text-xs font-bold text-red-500 hover:bg-red-500/10 transition-all flex items-center gap-1.5 disabled:opacity-50"
+                      >
+                        {deletingId === product.id ? (
+                          <Loader2 className="h-3 w-3 animate-spin" />
+                        ) : (
+                          <Trash2 size={14} />
+                        )}
+                        Delete
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}

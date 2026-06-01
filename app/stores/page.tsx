@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { Plus, Store, Search, Filter, Loader2, ExternalLink, MapPin, Phone, Check, X } from "lucide-react";
+import { Plus, Store, Search, Filter, Loader2, ExternalLink, MapPin, Phone, Check, X, Trash2 } from "lucide-react";
 
 
 export default function StoresPage() {
@@ -11,6 +11,7 @@ export default function StoresPage() {
   const [error, setError] = useState("");
   const [selectedStore, setSelectedStore] = useState<any>(null);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const [products, setProducts] = useState<any[]>([]);
   const [loadingProducts, setLoadingProducts] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -31,6 +32,32 @@ export default function StoresPage() {
       setError("Connection error. Could not reach backend.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDeleteStore = async (e: React.MouseEvent, id: string, name: string) => {
+    e.stopPropagation();
+    if (!window.confirm(`Are you sure you want to delete "${name}"? This action cannot be undone and will fail if the store has products.`)) return;
+
+    setDeletingId(id);
+    setIsProcessing(true);
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
+      const response = await fetch(`${baseUrl}/stores/${id}`, {
+        method: 'DELETE',
+      });
+      const data = await response.json();
+      if (data.success) {
+        setStores(prev => prev.filter(s => s.id !== id));
+        if (selectedStore?.id === id) setSelectedStore(null);
+      } else {
+        alert(data.error || "Failed to delete store");
+      }
+    } catch (err) {
+      alert("Connection error. Could not delete store.");
+    } finally {
+      setDeletingId(null);
+      setIsProcessing(false);
     }
   };
 
@@ -266,9 +293,23 @@ export default function StoresPage() {
                       </div>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <div className="flex justify-end gap-2">
-                        <button className="px-3 py-1.5 rounded-lg border border-border text-xs font-bold text-muted hover:bg-background transition-all">
-                          Edit
+                      <div className="flex justify-end gap-2" onClick={(e) => e.stopPropagation()}>
+                        <Link href={`/stores/${store.id}`}>
+                          <button className="px-3 py-1.5 rounded-lg border border-border text-xs font-bold text-muted hover:bg-background transition-all">
+                            Edit
+                          </button>
+                        </Link>
+                        <button 
+                          onClick={(e) => handleDeleteStore(e, store.id, store.name)}
+                          disabled={deletingId === store.id}
+                          className="px-3 py-1.5 rounded-lg border border-red-500/20 text-xs font-bold text-red-500 hover:bg-red-500/10 transition-all flex items-center gap-1.5 disabled:opacity-50"
+                        >
+                          {deletingId === store.id ? (
+                            <Loader2 className="h-3 w-3 animate-spin" />
+                          ) : (
+                            <Trash2 size={14} />
+                          )}
+                          Delete
                         </button>
                       </div>
                     </td>
