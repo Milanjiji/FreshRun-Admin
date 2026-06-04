@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Sidebar from "@/components/Sidebar";
-import Header from "@/components/Header";
+import ClientLayoutWrapper from "@/components/ClientLayoutWrapper";
 
 export const metadata: Metadata = {
   title: "FreshRun Admin | Dashboard",
@@ -35,13 +34,9 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full bg-background font-sans text-foreground">
-        <Sidebar />
-        <div className="ml-64 flex min-h-screen flex-col">
-          <Header />
-          <main className="flex-1 p-8">
-            {children}
-          </main>
-        </div>
+        <ClientLayoutWrapper>
+          {children}
+        </ClientLayoutWrapper>
       </body>
     </html>
   );

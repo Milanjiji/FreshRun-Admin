@@ -50,27 +50,27 @@ export default function NewStorePage() {
   }, []);
 
   const [formData, setFormData] = useState({
-    storeName: "",
-    description: "",
+    storeName: "The Grand Kitchen",
+    description: "Delicious traditional and modern cuisine served fresh daily.",
     category: "restaurants",
-    imageUrl: "",
-    storePhone1: "",
-    storePhone2: "",
-    storeHouseNumber: "",
-    storeAddressLine: "",
-    storeLandmark: "",
-    storePincode: "",
+    imageUrl: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=1000",
+    storePhone1: "9876543210",
+    storePhone2: "9876543211",
+    storeHouseNumber: "45/A",
+    storeAddressLine: "Beach Road, North Calicut",
+    storeLandmark: "Opposite Beach Park",
+    storePincode: "673001",
     storeCity: "Calicut",
-    latitude: "",
-    longitude: "",
-    mapsLink: "",
-    ownerFullName: "",
-    ownerEmail: "",
-    ownerPhone1: "",
-    ownerPhone2: "",
+    latitude: "11.2588",
+    longitude: "75.7804",
+    mapsLink: "https://maps.google.com/?q=11.2588,75.7804",
+    ownerFullName: "Milan Sebastian",
+    ownerEmail: "milan@example.com",
+    ownerPhone1: "9988776655",
+    ownerPhone2: "9988776644",
     vegType: "both",
     handlingFee: "5.90",
-    maxDeliveryDistance: "5.0"
+    maxDeliveryDistance: "10.0"
   });
 
   const [isMapOpen, setIsMapOpen] = useState(false);

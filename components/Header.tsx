@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Search, Bell, HelpCircle, ChevronDown, Sun, Moon } from "lucide-react";
+import { Search, Bell, ChevronDown, Sun, Moon } from "lucide-react";
 
 export default function Header() {
   const [mounted, setMounted] = useState(false);
@@ -39,11 +39,6 @@ export default function Header() {
 
       {/* Right Actions */}
       <div className="flex items-center gap-6">
-        <button className="flex items-center gap-1.5 text-sm font-medium text-muted hover:text-foreground transition-colors">
-          <HelpCircle className="h-4 w-4" />
-          Help
-        </button>
-
         {/* Theme Toggle Button */}
         <button 
           onClick={toggleTheme}

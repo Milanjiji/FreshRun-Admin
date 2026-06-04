@@ -33,25 +33,25 @@ interface UserData {
   createdAt: string;
 }
 
-export default function UsersPage() {
+export default function CustomersPage() {
   const [users, setUsers] = useState<UserData[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<UserData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [selectedUser, setSelectedUser] = useState<UserData | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [roleFilter, setRoleFilter] = useState("all");
 
   const fetchUsers = async () => {
     try {
       const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
-      const response = await fetch(`${baseUrl}/user/all`);
+      // Only fetch customers/users
+      const response = await fetch(`${baseUrl}/user/all?role=customer`);
       const data = await response.json();
       if (data.success) {
         setUsers(data.data);
         setFilteredUsers(data.data);
       } else {
-        setError(data.error || "Failed to load users");
+        setError(data.error || "Failed to load customers");
       }
     } catch (err) {
       setError("Connection error. Could not reach backend.");
@@ -77,12 +77,8 @@ export default function UsersPage() {
       );
     }
 
-    if (roleFilter !== "all") {
-      result = result.filter(u => u.role === roleFilter);
-    }
-
     setFilteredUsers(result);
-  }, [searchTerm, roleFilter, users]);
+  }, [searchTerm, users]);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-IN', {
@@ -99,8 +95,8 @@ export default function UsersPage() {
           {/* Header Section */}
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold tracking-tight text-foreground font-mont">Users</h1>
-              <p className="text-sm text-muted">Manage your customers, admins and delivery partners.</p>
+              <h1 className="text-2xl font-bold tracking-tight text-foreground font-mont">Customers</h1>
+              <p className="text-sm text-muted">View and manage registered customers on your platform.</p>
             </div>
           </div>
 
@@ -116,20 +112,6 @@ export default function UsersPage() {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-            
-            <div className="flex items-center gap-2">
-              <Filter className="h-4 w-4 text-muted" />
-              <select 
-                className="bg-transparent text-sm font-medium text-muted outline-none cursor-pointer"
-                value={roleFilter}
-                onChange={(e) => setRoleFilter(e.target.value)}
-              >
-                <option value="all">All Roles</option>
-                <option value="user">Customers</option>
-                <option value="admin">Admins</option>
-                <option value="delivery">Delivery</option>
-              </select>
-            </div>
           </div>
 
           {/* Users Content Area */}
@@ -137,7 +119,7 @@ export default function UsersPage() {
             <div className="flex min-h-[400px] items-center justify-center rounded-3xl border border-border bg-surface/50">
               <div className="flex flex-col items-center gap-3">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                <p className="text-sm text-muted font-medium">Loading users...</p>
+                <p className="text-sm text-muted font-medium">Loading customers...</p>
               </div>
             </div>
           ) : filteredUsers.length > 0 ? (
@@ -145,9 +127,8 @@ export default function UsersPage() {
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="border-b border-border bg-background/50">
-                    <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-muted">User Details</th>
+                    <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-muted">Customer Details</th>
                     <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-muted">Contact Info</th>
-                    <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-muted">Role</th>
                     <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-muted">Joined</th>
                     <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-muted">Status</th>
                   </tr>
@@ -185,15 +166,6 @@ export default function UsersPage() {
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <span className={`inline-flex items-center rounded-lg px-2.5 py-0.5 text-xs font-medium capitalize ${
-                          user.role === 'admin' ? 'bg-purple-500/10 text-purple-600 dark:text-purple-400' : 
-                          user.role === 'delivery' ? 'bg-blue-500/10 text-blue-600 dark:text-blue-400' : 
-                          'bg-green-500/10 text-green-600 dark:text-green-400'
-                        }`}>
-                          {user.role}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4">
                         <div className="flex items-center gap-1.5 text-muted text-xs">
                           <Calendar size={14} className="text-primary/60" />
                           <span>{formatDate(user.createdAt)}</span>
@@ -201,10 +173,10 @@ export default function UsersPage() {
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-2">
-                          <div className={`h-2 w-2 rounded-full ${user.isActive ? 'bg-primary' : 'bg-muted'}`} />
-                          <span className={`text-xs font-bold ${user.isActive ? 'text-primary' : 'text-muted'}`}>
-                            {user.isActive ? 'Active' : 'Inactive'}
-                          </span>
+                           <div className={`h-2 w-2 rounded-full ${user.isActive ? 'bg-primary' : 'bg-muted'}`} />
+                           <span className={`text-xs font-bold ${user.isActive ? 'text-primary' : 'text-muted'}`}>
+                              {user.isActive ? 'Active' : 'Inactive'}
+                           </span>
                         </div>
                       </td>
                     </tr>
@@ -217,9 +189,9 @@ export default function UsersPage() {
               <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-primary/10 text-primary">
                 <Users size={40} />
               </div>
-              <h3 className="text-xl font-bold text-foreground font-mont">No Users Found</h3>
+              <h3 className="text-xl font-bold text-foreground font-mont">No Customers Found</h3>
               <p className="mt-2 max-w-xs text-sm text-muted">
-                {error || "We couldn't find any users matching your search."}
+                {error || "We couldn't find any customers matching your search."}
               </p>
             </div>
           )}
@@ -229,7 +201,7 @@ export default function UsersPage() {
         {selectedUser && (
           <div className="w-[35%] bg-surface rounded-3xl border border-border shadow-xl p-6 h-fit sticky top-8 animate-in slide-in-from-right duration-300">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-bold font-mont">User Profile</h2>
+              <h2 className="text-lg font-bold font-mont">Customer Profile</h2>
               <button onClick={() => setSelectedUser(null)} className="p-2 hover:bg-background rounded-full transition-colors">
                 <Plus className="h-5 w-5 rotate-45 text-muted" />
               </button>
@@ -241,15 +213,7 @@ export default function UsersPage() {
                   <User size={40} />
                 </div>
                 <h3 className="text-xl font-bold font-mont text-center">{selectedUser.fullName || 'Unnamed User'}</h3>
-                <p className="text-xs text-muted font-mono uppercase mt-1">{selectedUser.id}</p>
                 <div className="mt-4 flex gap-2">
-                   <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
-                      selectedUser.role === 'admin' ? 'bg-purple-500/10 text-purple-600 dark:text-purple-400' : 
-                      selectedUser.role === 'delivery' ? 'bg-blue-500/10 text-blue-600 dark:text-blue-400' : 
-                      'bg-green-500/10 text-green-600 dark:text-green-400'
-                   }`}>
-                      {selectedUser.role}
-                   </span>
                    <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
                       selectedUser.isActive ? 'bg-primary/10 text-primary' : 'bg-muted text-muted'
                    }`}>
@@ -299,11 +263,6 @@ export default function UsersPage() {
                       </p>
                     </div>
                   </div>
-                  {selectedUser.deliveryMessage && (
-                    <div className="p-2 rounded-lg bg-surface border border-border italic text-xs text-muted">
-                      "{selectedUser.deliveryMessage}"
-                    </div>
-                  )}
                 </div>
               </div>
 

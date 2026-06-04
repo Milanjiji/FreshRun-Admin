@@ -11,6 +11,7 @@ export default function StoresPage() {
   const [error, setError] = useState("");
   const [selectedStore, setSelectedStore] = useState<any>(null);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
+  const [approvingId, setApprovingId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [products, setProducts] = useState<any[]>([]);
   const [loadingProducts, setLoadingProducts] = useState(false);
@@ -21,7 +22,7 @@ export default function StoresPage() {
   const fetchStores = async () => {
     try {
       const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
-      const response = await fetch(`${baseUrl}/stores?include_inactive=true`);
+      const response = await fetch(`${baseUrl}/stores?include_inactive=true&include_pending=true`);
       const data = await response.json();
       if (data.success) {
         setStores(data.data);
@@ -32,6 +33,31 @@ export default function StoresPage() {
       setError("Connection error. Could not reach backend.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleApproval = async (id: string, status: 'approved' | 'rejected') => {
+    setApprovingId(id);
+    setIsProcessing(true);
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
+      const response = await fetch(`${baseUrl}/stores/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ approval_status: status })
+      });
+      const data = await response.json();
+      if (data.success) {
+        setStores(prev => prev.map(s => s.id === id ? { ...s, approval_status: status } : s));
+        if (selectedStore?.id === id) {
+          setSelectedStore({ ...selectedStore, approval_status: status });
+        }
+      }
+    } catch (err) {
+      console.error("Failed to update approval status", err);
+    } finally {
+      setApprovingId(null);
+      setIsProcessing(false);
     }
   };
 
@@ -240,8 +266,8 @@ export default function StoresPage() {
                 <tr className="border-b border-border bg-background/50">
                   <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-muted">Store Details</th>
                   <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-muted">Status</th>
+                  <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-muted">Approval</th>
                   <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-muted">Category</th>
-                  <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-muted">Location</th>
                   <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-muted text-right">Actions</th>
                 </tr>
               </thead>
@@ -282,15 +308,18 @@ export default function StoresPage() {
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <span className="inline-flex items-center rounded-lg bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary capitalize">
-                        {store.category.replace('-', ' ')}
+                      <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
+                        store.approval_status === 'approved' ? 'bg-green-500/10 text-green-600' :
+                        store.approval_status === 'pending' ? 'bg-amber-500/10 text-amber-600' :
+                        'bg-red-500/10 text-red-600'
+                      }`}>
+                        {store.approval_status}
                       </span>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="flex items-center gap-1.5 text-muted">
-                        <MapPin size={14} className="text-primary/60" />
-                        <span className="text-xs truncate w-32">{store.city || 'Calicut'}</span>
-                      </div>
+                      <span className="inline-flex items-center rounded-lg bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary capitalize">
+                        {store.category.replace('-', ' ')}
+                      </span>
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex justify-end gap-2" onClick={(e) => e.stopPropagation()}>
@@ -396,6 +425,34 @@ export default function StoresPage() {
 
 
             <div className="pt-4 border-t border-border">
+               <div className="flex items-center justify-between mb-4">
+                  <h4 className="font-bold text-sm uppercase tracking-wider text-muted">Approval Status</h4>
+                  <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full ${
+                    selectedStore.approval_status === 'approved' ? 'bg-green-500/10 text-green-600' :
+                    selectedStore.approval_status === 'pending' ? 'bg-amber-500/10 text-amber-600' :
+                    'bg-red-500/10 text-red-600'
+                  }`}>
+                    {selectedStore.approval_status}
+                  </span>
+               </div>
+               
+               {selectedStore.approval_status === 'pending' && (
+                 <div className="flex gap-2 mb-4">
+                   <button 
+                     onClick={() => handleApproval(selectedStore.id, 'approved')}
+                     className="flex-1 py-2.5 rounded-xl bg-primary text-white text-xs font-bold shadow-lg shadow-primary/30 hover:bg-primary-dark transition-all"
+                   >
+                     Approve Store
+                   </button>
+                   <button 
+                     onClick={() => handleApproval(selectedStore.id, 'rejected')}
+                     className="flex-1 py-2.5 rounded-xl bg-red-500/10 text-red-500 border border-red-500/20 text-xs font-bold hover:bg-red-500/20 transition-all"
+                   >
+                     Reject
+                   </button>
+                 </div>
+               )}
+
                <div className="flex items-center justify-between mb-4">
                   <h4 className="font-bold text-sm uppercase tracking-wider text-muted">Store Availability</h4>
                   <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full ${selectedStore.is_active ? 'bg-primary/10 text-primary' : 'bg-muted text-muted'}`}>
