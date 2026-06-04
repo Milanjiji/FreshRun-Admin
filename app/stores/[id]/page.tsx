@@ -497,19 +497,23 @@ export default function EditStorePage() {
 
                 <div className="flex gap-2 flex-1">
                   <div className="flex-1">
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
+                      name="latitude"
                       value={formData.latitude}
+                      onChange={handleChange}
+                      placeholder="Latitude"
                       className="w-full rounded-xl border border-border bg-background px-4 py-3 text-xs outline-none focus:border-primary text-foreground transition-all text-center"
-                      readOnly
                     />
                   </div>
                   <div className="flex-1">
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
+                      name="longitude"
                       value={formData.longitude}
+                      onChange={handleChange}
+                      placeholder="Longitude"
                       className="w-full rounded-xl border border-border bg-background px-4 py-3 text-xs outline-none focus:border-primary text-foreground transition-all text-center"
-                      readOnly
                     />
                   </div>
                 </div>

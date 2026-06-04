@@ -467,7 +467,6 @@ export default function NewStorePage() {
                       onChange={handleChange}
                       placeholder="Latitude"
                       className="w-full rounded-xl border border-border bg-background px-4 py-3 text-xs outline-none focus:border-primary text-foreground transition-all text-center"
-                      readOnly
                     />
                   </div>
                   <div className="flex-1">
@@ -478,12 +477,11 @@ export default function NewStorePage() {
                       onChange={handleChange}
                       placeholder="Longitude"
                       className="w-full rounded-xl border border-border bg-background px-4 py-3 text-xs outline-none focus:border-primary text-foreground transition-all text-center"
-                      readOnly
                     />
                   </div>
                 </div>
               </div>
-              <p className="text-[10px] text-muted italic">Click the button above to point your store's exact location on a map.</p>
+              <p className="text-[10px] text-muted italic">Click the button above to point your store's exact location on a map, or type the coordinates directly.</p>
             </div>
           </div>
         </div>
