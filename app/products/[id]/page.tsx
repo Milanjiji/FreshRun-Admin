@@ -95,7 +95,7 @@ export default function EditProductPage() {
       setFetchingStores(true);
       try {
         const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
-        const response = await fetch(`${baseUrl}/stores?category=${formData.category}`);
+        const response = await fetch(`${baseUrl}/stores?category=${formData.category}&include_inactive=true&include_pending=true`);
         const data = await response.json();
         if (data.success) {
           setStores(data.data);

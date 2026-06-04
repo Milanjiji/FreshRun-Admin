@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState, useRef } from "react";
-import io from "socket.io-client";
 import { 
   ShoppingBag, 
   Search, 
@@ -16,6 +15,7 @@ import {
   IndianRupee,
   Calendar
 } from "lucide-react";
+import { useNotifications } from "@/context/NotificationContext";
 
 interface OrderData {
   id: string;
@@ -52,37 +52,32 @@ export default function OrdersPage() {
   const [localOrderState, setLocalOrderState] = useState<any>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
-
-  const socketRef = useRef<any>(null);
+  const { socket } = useNotifications();
 
   useEffect(() => {
-    const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
-    socketRef.current = io(baseUrl);
+    if (!socket) return;
 
-    socketRef.current.on("connect", () => {
-      console.log("[Admin] Socket connected");
-      socketRef.current.emit("join_room", "admin");
-    });
-
-    socketRef.current.on("new_order", (newOrder: OrderData) => {
-      console.log("[Admin] New order received:", newOrder.id);
+    const onNewOrder = (newOrder: OrderData) => {
+      console.log("[OrdersPage] New order received:", newOrder.id);
       setOrders(prev => [newOrder, ...prev]);
-    });
+    };
 
-    socketRef.current.on("order_status_changed", (updatedOrder: OrderData) => {
-      console.log("[Admin] Order status changed:", updatedOrder.id, updatedOrder.status);
+    const onStatusChanged = (updatedOrder: OrderData) => {
+      console.log("[OrdersPage] Order status changed:", updatedOrder.id, updatedOrder.status);
       setOrders(prev => prev.map(o => o.id === updatedOrder.id ? updatedOrder : o));
       if (selectedOrder?.id === updatedOrder.id) {
         setSelectedOrder(updatedOrder);
       }
-    });
+    };
+
+    socket.on("new_order", onNewOrder);
+    socket.on("order_status_changed", onStatusChanged);
 
     return () => {
-      if (socketRef.current) {
-        socketRef.current.disconnect();
-      }
+      socket.off("new_order", onNewOrder);
+      socket.off("order_status_changed", onStatusChanged);
     };
-  }, [selectedOrder?.id]);
+  }, [socket, selectedOrder?.id]);
 
   useEffect(() => {
     if (selectedOrder) {

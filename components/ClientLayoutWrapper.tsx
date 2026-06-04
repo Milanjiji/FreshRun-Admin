@@ -4,8 +4,30 @@ import React from "react";
 import { usePathname } from "next/navigation";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
+import ToastContainer from "@/components/ToastContainer";
+import { NotificationProvider, useNotifications } from "@/context/NotificationContext";
 
 const publicRoutes = ["/privacy", "/terms", "/refund", "/shipping", "/contact", "/about"];
+
+function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const { toasts, removeToast } = useNotifications();
+
+  return (
+    <>
+      <Sidebar />
+      <div 
+        className="flex min-h-screen flex-col transition-[margin-left] duration-75"
+        style={{ marginLeft: "var(--sidebar-width, 256px)" }}
+      >
+        <Header />
+        <main className="flex-1 p-8">
+          {children}
+        </main>
+      </div>
+      <ToastContainer toasts={toasts} removeToast={removeToast} />
+    </>
+  );
+}
 
 export default function ClientLayoutWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -22,17 +44,10 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
   }
 
   return (
-    <>
-      <Sidebar />
-      <div 
-        className="flex min-h-screen flex-col transition-[margin-left] duration-75"
-        style={{ marginLeft: "var(--sidebar-width, 256px)" }}
-      >
-        <Header />
-        <main className="flex-1 p-8">
-          {children}
-        </main>
-      </div>
-    </>
+    <NotificationProvider>
+      <DashboardLayout>
+        {children}
+      </DashboardLayout>
+    </NotificationProvider>
   );
 }
