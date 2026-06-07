@@ -308,6 +308,15 @@ export default function StoresPage() {
                       </div>
                     </td>
                     <td className="px-6 py-4">
+                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                        store.razorpay_kyc_status === 'activated' ? 'bg-green-500/10 text-green-600' :
+                        store.razorpay_kyc_status === 'needs_clarification' ? 'bg-amber-500/10 text-amber-600' :
+                        'bg-muted text-muted'
+                      }`}>
+                        {store.razorpay_kyc_status?.replace('_', ' ') || 'not set'}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
                       <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
                         store.approval_status === 'approved' ? 'bg-green-500/10 text-green-600' :
                         store.approval_status === 'pending' ? 'bg-amber-500/10 text-amber-600' :

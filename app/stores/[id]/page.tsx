@@ -133,6 +133,51 @@ export default function EditStorePage() {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  const handleOnboardRazorpay = async () => {
+    if (!formData.bankAccountNumber || !formData.ifscCode || !formData.panNumber) {
+      alert("Please fill in Bank Account, IFSC, and PAN details.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
+      const response = await fetch(`${baseUrl}/payments/onboard`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          role: "owner",
+          storeId: storeId,
+          bankDetails: {
+            accountNumber: formData.bankAccountNumber,
+            ifscCode: formData.ifscCode,
+          },
+          pan: formData.panNumber,
+          name: formData.ownerFullName,
+          email: formData.ownerEmail,
+          phone: formData.ownerPhone1,
+          businessName: formData.storeName
+        })
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setFormData(prev => ({ 
+          ...prev, 
+          razorpayAccountId: data.account_id,
+          razorpayKycStatus: 'created'
+        }));
+        alert("Razorpay onboarding initiated successfully!");
+      } else {
+        alert(data.error || "Failed to onboard store");
+      }
+    } catch (err) {
+      alert("Connection error. Could not reach backend.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -523,6 +568,92 @@ export default function EditStorePage() {
         </div>
 
         <div className="space-y-8">
+          {/* Razorpay Onboarding Section */}
+          <div className="rounded-2xl bg-surface p-6 border border-border shadow-sm space-y-6">
+            <div className="flex items-center gap-2 text-primary">
+              <CheckCircle2 size={20} />
+              <h3 className="font-bold text-foreground uppercase tracking-wider text-xs">Razorpay Onboarding</h3>
+            </div>
+
+            {formData.razorpayKycStatus === 'activated' ? (
+              <div className="rounded-xl bg-green-500/10 p-4 border border-green-500/20 text-center">
+                <CheckCircle2 size={32} className="mx-auto text-green-500 mb-2" />
+                <p className="text-sm font-bold text-green-600">Account Activated</p>
+                <p className="text-[10px] text-green-500 mt-1">ID: {formData.razorpayAccountId}</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <div className={`rounded-xl p-4 border text-center ${
+                  formData.razorpayKycStatus === 'needs_clarification' ? 'bg-amber-500/10 border-amber-500/20 text-amber-600' : 'bg-muted/10 border-border text-muted'
+                }`}>
+                  <p className="text-xs font-bold uppercase tracking-widest">
+                    Status: {formData.razorpayKycStatus.replace('_', ' ')}
+                  </p>
+                  {formData.razorpayKycStatus === 'needs_clarification' && (
+                    <p className="text-[10px] mt-1 italic">Action required from owner</p>
+                  )}
+                </div>
+
+                {!formData.razorpayAccountId ? (
+                  <div className="space-y-3 pt-2">
+                    <p className="text-xs text-muted">Enter store bank details to link with Razorpay Route.</p>
+                    <div className="space-y-3">
+                      <div>
+                        <label className="block text-[10px] font-bold text-muted uppercase mb-1">Account Number</label>
+                        <input 
+                          type="text" 
+                          name="bankAccountNumber"
+                          value={formData.bankAccountNumber}
+                          onChange={handleChange}
+                          className="w-full rounded-lg border border-border bg-background px-3 py-2 text-xs outline-none focus:border-primary"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-bold text-muted uppercase mb-1">IFSC Code</label>
+                        <input 
+                          type="text" 
+                          name="ifscCode"
+                          value={formData.ifscCode}
+                          onChange={handleChange}
+                          className="w-full rounded-lg border border-border bg-background px-3 py-2 text-xs outline-none focus:border-primary"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-bold text-muted uppercase mb-1">PAN Number</label>
+                        <input 
+                          type="text" 
+                          name="panNumber"
+                          value={formData.panNumber}
+                          onChange={handleChange}
+                          className="w-full rounded-lg border border-border bg-background px-3 py-2 text-xs outline-none focus:border-primary"
+                        />
+                      </div>
+                    </div>
+                    <button 
+                      type="button"
+                      onClick={handleOnboardRazorpay}
+                      disabled={loading}
+                      className="w-full py-2.5 rounded-xl bg-primary text-white text-xs font-bold shadow-lg shadow-primary/30 hover:bg-primary-dark transition-all mt-4"
+                    >
+                      {loading ? "Processing..." : "Link Razorpay Account"}
+                    </button>
+                  </div>
+                ) : (
+                  <div className="text-center p-2">
+                    <p className="text-[10px] text-muted">Linked Account ID: {formData.razorpayAccountId}</p>
+                    <button 
+                       type="button"
+                       className="mt-4 w-full py-2 rounded-lg border border-border text-[10px] font-bold text-muted hover:bg-background transition-all"
+                       onClick={() => alert("KYC status will be updated automatically via webhooks.")}
+                    >
+                      Refresh KYC Status
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
           <div className="rounded-2xl bg-surface p-6 border border-border shadow-sm space-y-6 sticky top-24">
             <div className="flex items-center gap-2 text-primary">
               <User size={20} />
