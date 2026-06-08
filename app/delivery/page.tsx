@@ -178,6 +178,20 @@ export default function DeliverySettingsPage() {
                 />
               </div>
             </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-muted mb-2">Platform Commission (%)</label>
+              <div className="relative">
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted/60">%</div>
+                <input 
+                  type="number"
+                  step="0.01"
+                  className="w-full pl-8 pr-4 py-3 bg-background border border-border rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary text-foreground outline-none transition-all"
+                  value={settings?.platform_commission ?? 10}
+                  onChange={(e) => setSettings({ ...settings, platform_commission: parseFloat(e.target.value) })}
+                />
+              </div>
+            </div>
           </div>
         </div>
 

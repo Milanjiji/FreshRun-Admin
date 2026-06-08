@@ -52,7 +52,10 @@ export default function EditProductPage() {
   const categories = [
     { id: "restaurants", name: "Restaurants", icon: "🍴" },
     { id: "street-food", name: "Street Food", icon: "🍱" },
-    { id: "groceries", name: "Groceries", icon: "🛒" }
+    { id: "groceries", name: "Groceries", icon: "🛒" },
+    { id: "chicken", name: "Chicken", icon: "🍗" },
+    { id: "fish", name: "Fish", icon: "🐟" },
+    { id: "medicine", name: "Medicine", icon: "💊" }
   ];
 
   // Fetch product data
