@@ -40,6 +40,8 @@ interface OrderData {
   store_name?: string;
   store_lat?: string;
   store_lng?: string;
+  rainy_surge_fee?: string;
+  payment_mode?: string;
 }
 
 export default function OrdersPage() {
@@ -52,7 +54,24 @@ export default function OrdersPage() {
   const [localOrderState, setLocalOrderState] = useState<any>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [platformCommission, setPlatformCommission] = useState(10);
   const { socket } = useNotifications();
+
+  useEffect(() => {
+    const fetchCommission = async () => {
+      try {
+        const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
+        const response = await fetch(`${baseUrl}/settings`);
+        const data = await response.json();
+        if (data.success && data.data?.platform_commission !== undefined) {
+          setPlatformCommission(parseFloat(data.data.platform_commission));
+        }
+      } catch (err) {
+        console.error("Failed to load platform commission rate", err);
+      }
+    };
+    fetchCommission();
+  }, []);
 
   useEffect(() => {
     if (!socket) return;
@@ -382,20 +401,82 @@ export default function OrdersPage() {
                </div>
 
                {/* Items */}
-               <div className="space-y-3">
-                 <h4 className="text-sm font-bold font-mont uppercase tracking-widest text-muted border-b border-border pb-2">Items</h4>
-                 <div className="space-y-2">
-                    {selectedOrder.items.map((item: any, index: number) => (
-                       <div key={index} className="flex justify-between items-center text-sm p-2 rounded-lg bg-background">
-                          <div className="flex items-center gap-2">
-                             <span className="font-bold text-primary">{item.quantity}x</span>
-                             <span>{item.name}</span>
-                          </div>
-                          <span className="font-medium">₹{(item.price * item.quantity).toFixed(2)}</span>
-                       </div>
-                    ))}
-                 </div>
-               </div>
+                <div className="space-y-3">
+                  <h4 className="text-sm font-bold font-mont uppercase tracking-widest text-muted border-b border-border pb-2">Items</h4>
+                  <div className="space-y-2">
+                     {selectedOrder.items.map((item: any, index: number) => (
+                        <div key={index} className="flex justify-between items-center text-sm p-2 rounded-lg bg-background">
+                           <div className="flex items-center gap-2">
+                              <span className="font-bold text-primary">{item.quantity}x</span>
+                              <span>{item.name}</span>
+                           </div>
+                           <span className="font-medium">₹{(item.price * item.quantity).toFixed(2)}</span>
+                        </div>
+                     ))}
+                  </div>
+                </div>
+
+                {/* Financial Summary */}
+                <div className="space-y-3">
+                  <h4 className="text-sm font-bold font-mont uppercase tracking-widest text-muted border-b border-border pb-2">Financial Breakdown</h4>
+                  <div className="p-4 rounded-xl bg-background border border-border space-y-2 text-xs">
+                     <div className="flex justify-between">
+                        <span className="text-muted">Item Subtotal (Order Amount):</span>
+                        <span className="font-semibold text-foreground">₹{parseFloat(selectedOrder.subtotal || "0").toFixed(2)}</span>
+                     </div>
+                     <div className="flex justify-between text-red-500">
+                        <span className="text-red-500/80">Platform Commission ({platformCommission}%):</span>
+                        <span className="font-semibold">-₹{(parseFloat(selectedOrder.subtotal || "0") * (platformCommission / 100)).toFixed(2)}</span>
+                     </div>
+                     <div className="flex justify-between text-green-600 dark:text-green-400 font-bold">
+                        <span className="text-green-600 dark:text-green-400">Store Share Earnings:</span>
+                        <span>₹{(parseFloat(selectedOrder.subtotal || "0") * (1 - (platformCommission / 100))).toFixed(2)}</span>
+                     </div>
+                     
+                     <div className="h-[1px] bg-border my-2" />
+                     
+                     <div className="flex justify-between">
+                        <span className="text-muted">Delivery Fee:</span>
+                        <span className="font-medium">₹{parseFloat(selectedOrder.delivery_fee || "0").toFixed(2)}</span>
+                     </div>
+                     {parseFloat(selectedOrder.handling_fee || "0") > 0 && (
+                        <div className="flex justify-between">
+                           <span className="text-muted">Handling Fee:</span>
+                           <span className="font-medium">₹{parseFloat(selectedOrder.handling_fee || "0").toFixed(2)}</span>
+                        </div>
+                     )}
+                     {parseFloat(selectedOrder.late_night_fee || "0") > 0 && (
+                        <div className="flex justify-between">
+                           <span className="text-muted">Late Night Fee:</span>
+                           <span className="font-medium">₹{parseFloat(selectedOrder.late_night_fee || "0").toFixed(2)}</span>
+                        </div>
+                     )}
+                     {selectedOrder.rainy_surge_fee && parseFloat(selectedOrder.rainy_surge_fee) > 0 && (
+                        <div className="flex justify-between">
+                           <span className="text-muted">Rainy Surge Fee:</span>
+                           <span className="font-medium">₹{parseFloat(selectedOrder.rainy_surge_fee).toFixed(2)}</span>
+                        </div>
+                     )}
+                     {parseFloat(selectedOrder.delivery_tip || "0") > 0 && (
+                        <div className="flex justify-between">
+                           <span className="text-muted">Delivery Rider Tip:</span>
+                           <span className="font-medium">₹{parseFloat(selectedOrder.delivery_tip || "0").toFixed(2)}</span>
+                        </div>
+                     )}
+                     
+                     <div className="h-[1px] bg-border my-2" />
+                     
+                     <div className="flex justify-between text-sm font-bold text-foreground">
+                        <span>Total Paid by Customer:</span>
+                        <span>₹{parseFloat(selectedOrder.total_amount || "0").toFixed(2)}</span>
+                     </div>
+                     
+                     <div className="flex justify-between text-[10px] mt-2 pt-1.5 border-t border-border/40 font-medium">
+                        <span className="text-muted/60">Payment Mode:</span>
+                        <span className="uppercase text-foreground font-semibold">{selectedOrder.payment_mode || 'COD'}</span>
+                     </div>
+                  </div>
+                </div>
 
                {/* Store Details */}
                <div className="space-y-3">

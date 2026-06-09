@@ -53,7 +53,12 @@ export default function EditStorePage() {
     ownerPhone2: "",
     vegType: "both",
     handlingFee: "5.90",
-    maxDeliveryDistance: "5.0"
+    maxDeliveryDistance: "5.0",
+    bankAccountNumber: "",
+    ifscCode: "",
+    panNumber: "",
+    razorpayKycStatus: "not_started",
+    razorpayAccountId: ""
   });
 
   const [isMapOpen, setIsMapOpen] = useState(false);
@@ -100,7 +105,12 @@ export default function EditStorePage() {
             ownerPhone2: "",
             vegType: s.veg_type || "both",
             handlingFee: s.handling_fee ? s.handling_fee.toString() : "5.90",
-            maxDeliveryDistance: s.max_delivery_distance ? s.max_delivery_distance.toString() : "5.0"
+            maxDeliveryDistance: s.max_delivery_distance ? s.max_delivery_distance.toString() : "5.0",
+            bankAccountNumber: "",
+            ifscCode: "",
+            panNumber: "",
+            razorpayKycStatus: "not_started",
+            razorpayAccountId: ""
           });
 
           // Fetch owner details
@@ -111,10 +121,15 @@ export default function EditStorePage() {
               const u = userData.data;
               setFormData(prev => ({
                 ...prev,
-                ownerFullName: u.full_name || "",
+                ownerFullName: u.full_name || u.fullName || "",
                 ownerEmail: u.email || "",
-                ownerPhone1: u.phone_number || "",
-                ownerPhone2: "" // Not typically in user model
+                ownerPhone1: u.phone_number || u.phone || "",
+                ownerPhone2: "", // Not typically in user model
+                bankAccountNumber: u.bank_account_number || u.bankAccountNumber || "",
+                ifscCode: u.bank_ifsc || u.bankIfsc || "",
+                panNumber: u.pan_number || u.panNumber || "",
+                razorpayKycStatus: u.razorpay_kyc_status || u.razorpayKycStatus || "not_started",
+                razorpayAccountId: u.razorpay_account_id || u.razorpayAccountId || ""
               }));
             }
           }

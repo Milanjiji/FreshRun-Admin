@@ -32,8 +32,7 @@ const navItems = [
   { label: "Customers", href: "/customers", icon: Users },
   { label: "Orders", href: "/orders", icon: ShoppingCart },
   { label: "Products", href: "/products", icon: Package },
-  { label: "Delivery Settings", href: "/delivery", icon: Truck },
-  { label: "Settings", href: "/settings", icon: Settings },
+  { label: "System Settings", href: "/delivery", icon: Settings },
 ];
 
 const legalItems = [

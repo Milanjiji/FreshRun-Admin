@@ -62,6 +62,7 @@ export default function StoreOwnersPage() {
   const [transactions, setTransactions] = useState<any[]>([]);
   const [transactionsLoading, setTransactionsLoading] = useState(false);
   const [copiedId, setCopiedId] = useState(false);
+  const [expandedTxId, setExpandedTxId] = useState<number | null>(null);
 
   const fetchTransactions = async (ownerId: string) => {
     setTransactionsLoading(true);
@@ -85,6 +86,7 @@ export default function StoreOwnersPage() {
     } else {
       setTransactions([]);
     }
+    setExpandedTxId(null);
   }, [selectedUser?.id]);
 
   const handleRecordPayout = async () => {
@@ -477,23 +479,110 @@ export default function StoreOwnersPage() {
                     <Loader2 className="h-6 w-6 animate-spin text-primary" />
                   </div>
                 ) : transactions.length > 0 ? (
-                  <div className="space-y-3 max-h-60 overflow-y-auto pr-1">
-                    {transactions.map((tx) => (
-                      <div key={tx.id} className="p-3 bg-background border border-border rounded-xl flex items-start justify-between gap-3 text-xs">
-                        <div className="space-y-1">
-                          <p className="font-bold text-foreground leading-tight">{tx.description}</p>
-                          <p className="text-[10px] text-muted">{new Date(tx.created_at).toLocaleString('en-IN')}</p>
+                  <div className="space-y-3 max-h-96 overflow-y-auto pr-1">
+                    {transactions.map((tx) => {
+                      const isExpanded = expandedTxId === tx.id;
+                      const hasOrderDetails = tx.type === 'earning' && tx.order_id !== null && tx.subtotal !== null;
+                      
+                      const subtotal = parseFloat(tx.subtotal) || 0;
+                      const storeEarned = parseFloat(tx.amount) || 0;
+                      const commissionTaken = Math.max(0, subtotal - storeEarned);
+                      const deliveryFee = parseFloat(tx.delivery_fee) || 0;
+                      const handlingFee = parseFloat(tx.handling_fee) || 0;
+                      const surgeFee = parseFloat(tx.rainy_surge_fee) || 0;
+                      const lateNightFee = parseFloat(tx.late_night_fee) || 0;
+                      const tip = parseFloat(tx.delivery_tip) || 0;
+                      const totalOrderAmount = parseFloat(tx.total_amount) || 0;
+
+                      return (
+                        <div 
+                          key={tx.id} 
+                          onClick={() => hasOrderDetails && setExpandedTxId(isExpanded ? null : tx.id)}
+                          className={`p-3 bg-background border border-border rounded-xl transition-all ${
+                            hasOrderDetails ? 'cursor-pointer hover:border-primary/40' : ''
+                          }`}
+                        >
+                          <div className="flex items-start justify-between gap-3 text-xs">
+                            <div className="space-y-1">
+                              <p className="font-bold text-foreground leading-tight flex items-center gap-1.5">
+                                {tx.description}
+                                {hasOrderDetails && (
+                                  <span className="text-[9px] font-normal text-primary bg-primary/5 px-1.5 py-0.5 rounded-md">
+                                    {isExpanded ? 'Hide Details' : 'Show Details'}
+                                  </span>
+                                )}
+                              </p>
+                              <p className="text-[10px] text-muted">{new Date(tx.created_at).toLocaleString('en-IN')}</p>
+                            </div>
+                            <div className="text-right shrink-0">
+                              <span className={`font-bold font-mono text-sm ${
+                                tx.type === 'earning' ? 'text-green-600 dark:text-green-400' : 'text-red-500'
+                              }`}>
+                                {tx.type === 'earning' ? '+' : '-'}₹{parseFloat(tx.amount).toFixed(2)}
+                              </span>
+                              <p className="text-[9px] uppercase tracking-wider text-muted font-bold mt-0.5">{tx.type}</p>
+                            </div>
+                          </div>
+
+                          {/* Expanded Order Breakdown details */}
+                          {hasOrderDetails && isExpanded && (
+                            <div className="mt-3 pt-3 border-t border-border space-y-1.5 text-[11px] text-muted animate-in fade-in slide-in-from-top-1 duration-150">
+                              <div className="flex justify-between">
+                                <span>Item Subtotal (Order Amount):</span>
+                                <span className="font-semibold text-foreground">₹{subtotal.toFixed(2)}</span>
+                              </div>
+                              <div className="flex justify-between text-red-500">
+                                <span>Platform Commission Taken:</span>
+                                <span className="font-semibold">-₹{commissionTaken.toFixed(2)}</span>
+                              </div>
+                              <div className="flex justify-between text-green-600 dark:text-green-400 font-bold">
+                                <span>Your Credit Earnings:</span>
+                                <span>₹{storeEarned.toFixed(2)}</span>
+                              </div>
+
+                              <div className="h-[1px] bg-border my-2" />
+                              <div className="text-[10px] uppercase font-bold text-muted/60 tracking-wider mb-1">Customer Paid Extra Charges:</div>
+                              
+                              <div className="flex justify-between">
+                                <span>Delivery Fee:</span>
+                                <span>₹{deliveryFee.toFixed(2)}</span>
+                              </div>
+                              
+                              {handlingFee > 0 && (
+                                <div className="flex justify-between">
+                                  <span>Handling Fee:</span>
+                                  <span>₹{handlingFee.toFixed(2)}</span>
+                                </div>
+                              )}
+                              
+                              {(surgeFee > 0 || lateNightFee > 0) && (
+                                <div className="flex justify-between">
+                                  <span>Surge / Late Night Fee:</span>
+                                  <span>₹{(surgeFee + lateNightFee).toFixed(2)}</span>
+                                </div>
+                              )}
+                              
+                              {tip > 0 && (
+                                <div className="flex justify-between">
+                                  <span>Delivery Rider Tip:</span>
+                                  <span>₹{tip.toFixed(2)}</span>
+                                </div>
+                              )}
+                              
+                              <div className="flex justify-between font-bold text-foreground pt-1.5 border-t border-dashed border-border text-xs">
+                                <span>Total Paid by Customer:</span>
+                                <span>₹{totalOrderAmount.toFixed(2)}</span>
+                              </div>
+                              
+                              <div className="flex justify-between text-[10px] mt-2 pt-1.5 border-t border-border/40 font-medium">
+                                <span className="text-muted/60">Payment Mode:</span>
+                                <span className="uppercase text-foreground font-semibold">{tx.payment_mode || 'COD'}</span>
+                              </div>
+                            </div>
+                          )}
                         </div>
-                        <div className="text-right shrink-0">
-                          <span className={`font-bold font-mono text-sm ${
-                            tx.type === 'earning' ? 'text-green-600 dark:text-green-400' : 'text-red-500'
-                          }`}>
-                            {tx.type === 'earning' ? '+' : '-'}₹{parseFloat(tx.amount).toFixed(2)}
-                          </span>
-                          <p className="text-[9px] uppercase tracking-wider text-muted font-bold mt-0.5">{tx.type}</p>
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 ) : (
                   <p className="text-xs text-muted text-center py-6">No transactions recorded yet.</p>

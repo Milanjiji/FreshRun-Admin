@@ -40,7 +40,7 @@ export default function DeliverySettingsPage() {
       });
       const data = await response.json();
       if (data.success) {
-        setMessage({ type: "success", text: "Delivery settings updated successfully!" });
+        setMessage({ type: "success", text: "System settings updated successfully!" });
       } else {
         setMessage({ type: "error", text: data.error || "Failed to update settings" });
       }
@@ -65,8 +65,8 @@ export default function DeliverySettingsPage() {
     <div className="p-6 max-w-6xl mx-auto">
       <div className="mb-8 flex justify-between items-end">
         <div>
-          <h1 className="text-3xl font-bold text-foreground font-mont">Delivery Settings</h1>
-          <p className="text-muted mt-1">Configure delivery radius, per-km charges, and surge pricing</p>
+          <h1 className="text-3xl font-bold text-foreground font-mont">System Settings</h1>
+          <p className="text-muted mt-1">Configure delivery limits, pricing, and platform order commission</p>
         </div>
         
         <button 
