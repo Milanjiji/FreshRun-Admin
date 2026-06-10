@@ -26,7 +26,7 @@ export default function ShippingAndDelivery() {
              <h2 className="text-2xl font-bold m-0 font-mont uppercase">Service Area</h2>
           </div>
           <p className="text-muted-foreground leading-relaxed">
-            FreshRun currently operates as a hyper-local delivery service in **Calicut and Alappuzha (Punnapra area)**. We deliver within a **5-7 km radius** of our partner stores to ensure that your orders arrive fresh and on time.
+            FreshRush currently operates as a hyper-local delivery service in **Bauria, Howrah (West Bengal)**. We deliver within a **5-7 km radius** of our partner stores to ensure that your orders arrive fresh and on time.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
              <div className="p-4 rounded-xl bg-surface border border-border flex items-center gap-4 shadow-sm">

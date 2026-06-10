@@ -3,8 +3,8 @@ import "./globals.css";
 import ClientLayoutWrapper from "@/components/ClientLayoutWrapper";
 
 export const metadata: Metadata = {
-  title: "FreshRun Admin | Dashboard",
-  description: "Management dashboard for FreshRun",
+  title: "FreshRush Admin | Dashboard",
+  description: "Management dashboard for FreshRush",
 };
 
 export default function RootLayout({

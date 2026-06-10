@@ -110,7 +110,7 @@ export default function RefundPolicy() {
            <h3 className="text-xl font-bold font-mont mb-2">Need help with a refund?</h3>
            <p className="text-sm text-muted-foreground mb-6">Contact our support team with your Order ID for quick assistance.</p>
            <div className="flex justify-center gap-4">
-              <a href="mailto:support@freshrun.com" className="px-6 py-2 bg-primary text-white font-bold rounded-xl text-sm">Email Support</a>
+              <a href="mailto:support@freshrush.com" className="px-6 py-2 bg-primary text-white font-bold rounded-xl text-sm">Email Support</a>
               <button className="px-6 py-2 bg-background border border-border text-foreground font-bold rounded-xl text-sm">Call Us</button>
            </div>
         </section>

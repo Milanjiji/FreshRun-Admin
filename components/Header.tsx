@@ -70,8 +70,8 @@ export default function Header() {
 
           <div className="flex items-center gap-3 border-l border-border pl-6">
             <div className="text-right">
-              <p className="text-sm font-semibold text-foreground">Milan Admin</p>
-              <p className="text-[10px] text-muted">milan@freshrun.com</p>
+              <p className="text-sm font-semibold text-foreground">Milan J</p>
+              <p className="text-[10px] text-muted">milanjiji7172@gmail.com</p>
             </div>
             <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center overflow-hidden border border-primary/20">
               <span className="text-sm font-bold text-primary">M</span>

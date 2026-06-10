@@ -16,7 +16,7 @@ export default function Dashboard() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-foreground font-mont">Dashboard</h1>
-          <p className="text-sm text-muted">Welcome back, here's what's happening with FreshRun today.</p>
+          <p className="text-sm text-muted">Welcome back, here's what's happening with FreshRush today.</p>
         </div>
         <div className="flex gap-4">
           <button className="flex items-center gap-2 rounded-xl bg-surface border border-primary text-primary px-5 py-2.5 text-sm font-semibold shadow-sm hover:bg-primary/5 transition-all">
@@ -33,7 +33,7 @@ export default function Dashboard() {
       {/* Main Banner (Reference Style) */}
       <div className="relative overflow-hidden rounded-2xl bg-primary/10 p-8">
         <div className="relative z-10 max-w-lg">
-          <h2 className="text-xl font-bold text-primary-dark mb-2">Power your business with FreshRun Admin</h2>
+          <h2 className="text-xl font-bold text-primary-dark mb-2">Power your business with FreshRush Admin</h2>
           <p className="text-sm text-primary/80 mb-6 leading-relaxed">
             Manage your restaurants, delivery partners, and orders in one unified platform. 
             Track real-time performance and grow your business efficiently.

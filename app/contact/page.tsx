@@ -23,19 +23,25 @@ export default function ContactUs() {
               <ContactCard 
                 icon={<Mail className="text-primary" size={24} />}
                 title="Email Support"
-                value="support@freshrun.com"
-                link="mailto:support@freshrun.com"
+                value="support@freshrush.com"
+                link="mailto:support@freshrush.com"
               />
               <ContactCard 
                 icon={<Phone className="text-primary" size={24} />}
                 title="Phone Support"
-                value="+91 98765 43210"
-                link="tel:+919876543210"
+                value="9088568423"
+                link="tel:9088568423"
               />
               <ContactCard 
                 icon={<MapPin className="text-primary" size={24} />}
                 title="Office Location"
-                value="Beach Road, Punnapra, Alappuzha, Kerala - 688005"
+                value="Bauria, Howrah, West Bengal, India"
+              />
+              <ContactCard 
+                icon={<Mail className="text-secondary" size={24} />}
+                title="Lead Developer (Milan J)"
+                value="milanjiji7172@gmail.com"
+                link="mailto:milanjiji7172@gmail.com"
               />
            </div>
 

@@ -17,7 +17,7 @@ export default function PrivacyPolicy() {
 
       <div className="prose prose-slate dark:prose-invert max-w-none">
         <p className="text-lg leading-relaxed text-muted-foreground">
-          At FreshRun, we value your privacy and are committed to protecting your personal data. This Privacy Policy explains how we collect, use, and safeguard your information when you use our Customer and Delivery Partner applications.
+          At FreshRush, we value your privacy and are committed to protecting your personal data. This Privacy Policy explains how we collect, use, and safeguard your information when you use our Customer and Delivery Partner applications.
         </p>
 
         {/* Section 1: Information We Collect */}
@@ -111,7 +111,7 @@ export default function PrivacyPolicy() {
               We retain your data as long as your account is active. You have the right to request the deletion of your account and all associated personal data at any time.
             </p>
             <p className="text-sm font-bold text-foreground">
-              To delete your account: Navigate to Settings within the app and select "Delete Account" or contact us at support@freshrun.com.
+              To delete your account: Navigate to Settings within the app and select "Delete Account" or contact us at support@freshrush.com.
             </p>
           </div>
         </section>
@@ -123,7 +123,7 @@ export default function PrivacyPolicy() {
             If you have any questions about this Privacy Policy, please contact our data protection team.
           </p>
           <a 
-            href="mailto:privacy@freshrun.com" 
+            href="mailto:privacy@freshrush.com" 
             className="inline-flex items-center gap-2 px-6 py-3 bg-white text-primary font-bold rounded-xl hover:bg-opacity-90 transition-all"
           >
             <FileText size={18} />

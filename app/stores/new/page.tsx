@@ -154,7 +154,7 @@ export default function NewStorePage() {
         </div>
         <h2 className="text-3xl font-bold text-foreground font-mont">Store Created!</h2>
         <p className="mt-2 text-muted text-lg">
-          The store has been successfully listed and is now visible in the FreshRun app.
+          The store has been successfully listed and is now visible in the FreshRush app.
         </p>
         <p className="mt-4 text-sm text-muted">Redirecting you back to stores list...</p>
       </div>
@@ -517,7 +517,7 @@ export default function NewStorePage() {
                   name="ownerEmail"
                   value={formData.ownerEmail}
                   onChange={handleChange}
-                  placeholder="owner@freshrun.com"
+                  placeholder="owner@freshrush.com"
                   className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm outline-none focus:border-primary transition-all"
                 />
               </div>
@@ -556,7 +556,7 @@ export default function NewStorePage() {
             <div className="pt-4 border-t border-border">
               <div className="rounded-xl bg-primary/5 p-4 border border-primary/10">
                 <p className="text-xs text-primary font-medium leading-relaxed">
-                  Listing a store will automatically create an owner profile. The owner can use their primary phone to log in to the FreshRun platform.
+                  Listing a store will automatically create an owner profile. The owner can use their primary phone to log in to the FreshRush platform.
                 </p>
               </div>
             </div>

@@ -114,7 +114,7 @@ export default function Sidebar() {
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
             <Image 
               src="/logo.png" 
-              alt="FreshRun Logo" 
+              alt="FreshRush Logo" 
               width={32} 
               height={32} 
               className="object-contain"
@@ -122,7 +122,7 @@ export default function Sidebar() {
           </div>
           {!isCollapsed && (
             <span className="text-xl font-bold tracking-tight text-foreground font-mont whitespace-nowrap">
-              Fresh<span className="text-primary">Run</span>
+              Fresh<span className="text-primary">Rush</span>
             </span>
           )}
         </div>

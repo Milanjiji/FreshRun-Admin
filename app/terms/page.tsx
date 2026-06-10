@@ -17,7 +17,7 @@ export default function TermsAndConditions() {
 
       <div className="prose prose-slate dark:prose-invert max-w-none space-y-8">
         <p className="text-lg leading-relaxed text-muted-foreground italic border-l-4 border-primary pl-4 bg-primary/5 py-4 rounded-r-xl">
-          Welcome to FreshRun. By using our application or website, you agree to comply with and be bound by the following terms and conditions of use.
+          Welcome to FreshRush. By using our application or website, you agree to comply with and be bound by the following terms and conditions of use.
         </p>
 
         {/* Section 1 */}
@@ -27,7 +27,7 @@ export default function TermsAndConditions() {
             Acceptance of Terms
           </h2>
           <p className="text-muted-foreground leading-relaxed">
-            By accessing or using the FreshRun platform (Customer App, Delivery App, or Admin Dashboard), you signify that you have read, understood, and agree to be bound by these Terms and Conditions. If you do not agree, please do not use our services.
+            By accessing or using the FreshRush platform (Customer App, Delivery App, or Admin Dashboard), you signify that you have read, understood, and agree to be bound by these Terms and Conditions. If you do not agree, please do not use our services.
           </p>
         </section>
 
@@ -60,7 +60,7 @@ export default function TermsAndConditions() {
           <div className="bg-amber-500/5 border border-amber-500/10 p-4 rounded-xl flex gap-4 items-start">
              <ShieldAlert size={24} className="text-amber-500 shrink-0" />
              <p className="text-xs text-amber-700 font-medium">
-               Note: FreshRun is a marketplace. We are not responsible for the quality of food or products prepared by third-party restaurants or vendors, though we assist in dispute resolution.
+               Note: FreshRush is a marketplace. We are not responsible for the quality of food or products prepared by third-party restaurants or vendors, though we assist in dispute resolution.
              </p>
           </div>
         </section>
@@ -72,7 +72,7 @@ export default function TermsAndConditions() {
             Pricing and Payments
           </h2>
           <p className="text-muted-foreground">
-            All prices are set by the respective vendors. FreshRun may charge a delivery fee and a small handling fee per order. Payments can be made via integrated secure payment gateways or cash on delivery where available.
+            All prices are set by the respective vendors. FreshRush may charge a delivery fee and a small handling fee per order. Payments can be made via integrated secure payment gateways or cash on delivery where available.
           </p>
         </section>
 
@@ -83,7 +83,7 @@ export default function TermsAndConditions() {
             Intellectual Property
           </h2>
           <p className="text-muted-foreground">
-            All content on the FreshRun platform, including logos, graphics, and software, is the property of FreshRun and protected by copyright laws.
+            All content on the FreshRush platform, including logos, graphics, and software, is the property of FreshRush and protected by copyright laws.
           </p>
         </section>
 
@@ -94,7 +94,7 @@ export default function TermsAndConditions() {
             Limitation of Liability
           </h2>
           <p className="text-muted-foreground">
-            FreshRun shall not be liable for any indirect, incidental, special, or consequential damages resulting from the use or inability to use our services.
+            FreshRush shall not be liable for any indirect, incidental, special, or consequential damages resulting from the use or inability to use our services.
           </p>
         </section>
 
