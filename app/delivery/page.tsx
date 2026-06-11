@@ -192,6 +192,20 @@ export default function DeliverySettingsPage() {
                 />
               </div>
             </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-muted mb-2">Extra Store Charge (₹)</label>
+              <div className="relative">
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted/60">₹</div>
+                <input 
+                  type="number"
+                  className="w-full pl-8 pr-4 py-3 bg-background border border-border rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary text-foreground outline-none transition-all"
+                  value={settings?.extra_store_charge ?? 20}
+                  onChange={(e) => setSettings({ ...settings, extra_store_charge: parseFloat(e.target.value) })}
+                />
+              </div>
+              <p className="text-[10px] text-muted mt-2 px-1">Applied for each additional store in the cart.</p>
+            </div>
           </div>
         </div>
 

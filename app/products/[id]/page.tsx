@@ -17,7 +17,8 @@ import {
   IndianRupee,
   Box,
   Percent,
-  ChevronDown
+  ChevronDown,
+  Plus
 } from "lucide-react";
 import Link from "next/link";
 import { CldUploadWidget } from 'next-cloudinary';
@@ -36,6 +37,11 @@ export default function EditProductPage() {
   const [stores, setStores] = useState<any[]>([]);
   const isCloudinaryConfigured = Boolean(process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME);
   
+  const [hasVariants, setHasVariants] = useState(false);
+  const [variants, setVariants] = useState<any[]>([
+    { id: "var_1", unit: "", price: "", discountPercent: "0", stockQuantity: "100", isStockOut: false }
+  ]);
+  
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -45,18 +51,58 @@ export default function EditProductPage() {
     stockQuantity: "100",
     isStockOut: false,
     category: "restaurants",
+    subcategory: "",
     storeId: "",
-    isVeg: true
+    isVeg: true,
+    unit: ""
   });
 
-  const categories = [
-    { id: "restaurants", name: "Restaurants", icon: "🍴" },
-    { id: "street-food", name: "Street Food", icon: "🍱" },
-    { id: "groceries", name: "Groceries", icon: "🛒" },
-    { id: "chicken", name: "Chicken", icon: "🍗" },
-    { id: "fish", name: "Fish", icon: "🐟" },
-    { id: "medicine", name: "Medicine", icon: "💊" }
-  ];
+  const [categories, setCategories] = useState<any[]>([
+    { slug: "restaurants", name: "Restaurants" },
+    { slug: "street-food", name: "Street Food" },
+    { slug: "groceries", name: "Groceries" },
+    { slug: "chicken", name: "Chicken" },
+    { slug: "fish", name: "Fish" },
+    { slug: "medicine", name: "Medicine" }
+  ]);
+  const [subcategories, setSubcategories] = useState<any[]>([]);
+  const [initialSubcategory, setInitialSubcategory] = useState<string | null>(null);
+
+
+  // Fetch categories on mount
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
+        const response = await fetch(`${baseUrl}/categories`);
+        const data = await response.json();
+        if (data.success && Array.isArray(data.data)) {
+          setCategories(data.data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch categories", err);
+      }
+    };
+    fetchCategories();
+  }, []);
+
+  // Update subcategories when category changes
+  useEffect(() => {
+    if (formData.category) {
+      const selected = categories.find(c => c.slug === formData.category);
+      const subcats = selected?.subcategories || [];
+      setSubcategories(subcats);
+      
+      if (initialSubcategory) {
+        if (subcats.some((s: any) => s.name === initialSubcategory)) {
+          setFormData(prev => ({ ...prev, subcategory: initialSubcategory }));
+        }
+        setInitialSubcategory(null);
+      } else if (formData.subcategory && subcats.length > 0 && !subcats.some((s: any) => s.name === formData.subcategory)) {
+        setFormData(prev => ({ ...prev, subcategory: "" }));
+      }
+    }
+  }, [formData.category, categories, initialSubcategory]);
 
   // Fetch product data
   useEffect(() => {
@@ -67,6 +113,26 @@ export default function EditProductPage() {
         const data = await response.json();
         if (data.success) {
           const p = data.data;
+          const hasVars = Array.isArray(p.variants) && p.variants.length > 0;
+          setHasVariants(hasVars);
+          if (hasVars) {
+            setVariants(p.variants.map((v: any) => ({
+              id: v.id || "var_" + Math.random().toString(36).substr(2, 5),
+              unit: v.unit || "",
+              price: v.price.toString(),
+              discountPercent: (v.discount_percent || 0).toString(),
+              stockQuantity: (v.stock_quantity || 0).toString(),
+              isStockOut: v.is_stock_out || false
+            })));
+          } else {
+            setVariants([
+              { id: "var_1", unit: "", price: "", discountPercent: "0", stockQuantity: "100", isStockOut: false }
+            ]);
+          }
+
+          if (p.subcategory) {
+            setInitialSubcategory(p.subcategory);
+          }
           setFormData({
             name: p.name,
             description: p.description || "",
@@ -76,8 +142,10 @@ export default function EditProductPage() {
             stockQuantity: p.stock_quantity.toString(),
             isStockOut: p.is_stock_out,
             category: p.category,
+            subcategory: p.subcategory || "",
             storeId: p.store_id,
-            isVeg: p.is_veg
+            isVeg: p.is_veg,
+            unit: p.unit || ""
           });
         } else {
           setError(data.error || "Failed to fetch product details");
@@ -130,20 +198,48 @@ export default function EditProductPage() {
       return;
     }
 
+    if (hasVariants) {
+      // Validate variants
+      const invalidVariant = variants.find(v => !v.unit.trim() || !v.price || isNaN(parseFloat(v.price)));
+      if (invalidVariant) {
+        setError("Please enter a valid Quantity/Unit and Price for all variants.");
+        setLoading(false);
+        return;
+      }
+    } else {
+      if (!formData.price || isNaN(parseFloat(formData.price))) {
+        setError("Please enter a valid base price.");
+        setLoading(false);
+        return;
+      }
+    }
+
     try {
       const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
+      
+      const payload = {
+        ...formData,
+        price: hasVariants ? parseFloat(variants[0].price) : parseFloat(formData.price),
+        discountPercent: hasVariants ? parseInt(variants[0].discountPercent || "0") : parseInt(formData.discountPercent || "0"),
+        stockQuantity: hasVariants ? parseInt(variants[0].stockQuantity || "0") : parseInt(formData.stockQuantity || "0"),
+        isStockOut: hasVariants ? variants[0].isStockOut : formData.isStockOut,
+        unit: hasVariants ? variants[0].unit : formData.unit,
+        variants: hasVariants ? variants.map(v => ({
+          id: v.id,
+          unit: v.unit.trim(),
+          price: parseFloat(v.price),
+          discount_percent: parseInt(v.discountPercent || "0"),
+          stock_quantity: parseInt(v.stockQuantity || "0"),
+          is_stock_out: v.isStockOut || false
+        })) : []
+      };
+
       const response = await fetch(`${baseUrl}/products/${productId}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({
-          ...formData,
-          price: parseFloat(formData.price),
-          discountPercent: parseInt(formData.discountPercent),
-          stockQuantity: parseInt(formData.stockQuantity),
-          isActive: true // Assume active if editing
-        })
+        body: JSON.stringify(payload)
       });
 
       const data = await response.json();
@@ -263,13 +359,34 @@ export default function EditProductPage() {
                       className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm outline-none focus:border-primary transition-all appearance-none pr-10"
                     >
                       {categories.map(cat => (
-                        <option key={cat.id} value={cat.id}>{cat.icon} {cat.name}</option>
+                        <option key={cat.slug} value={cat.slug}>{cat.name}</option>
                       ))}
                     </select>
                     <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted/50 pointer-events-none" />
                   </div>
                 </div>
-                <div>
+
+                {subcategories.length > 0 && (
+                  <div>
+                    <label className="block text-sm font-medium text-muted mb-1.5">Subcategory</label>
+                    <div className="relative">
+                      <select 
+                        name="subcategory"
+                        value={formData.subcategory}
+                        onChange={handleChange}
+                        className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm outline-none focus:border-primary transition-all appearance-none pr-10"
+                      >
+                        <option value="">-- Select Subcategory (Optional) --</option>
+                        {subcategories.map(sub => (
+                          <option key={sub.id || sub.name} value={sub.name}>{sub.name}</option>
+                        ))}
+                      </select>
+                      <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted/50 pointer-events-none" />
+                    </div>
+                  </div>
+                )}
+
+                <div className={subcategories.length > 0 ? "md:col-span-2" : ""}>
                   <label className="block text-sm font-medium text-muted mb-1.5 flex items-center justify-between">
                     Link to Store
                     {fetchingStores && <Loader2 size={12} className="animate-spin text-primary" />}
@@ -300,56 +417,202 @@ export default function EditProductPage() {
 
           {/* Section 2: Pricing & Inventory */}
           <div className="rounded-2xl bg-surface p-6 border border-border shadow-sm space-y-6">
-            <div className="flex items-center gap-2 text-primary">
-              <IndianRupee size={20} />
-              <h3 className="font-bold text-foreground uppercase tracking-wider text-xs">Pricing & Inventory</h3>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-primary">
+                <IndianRupee size={20} />
+                <h3 className="font-bold text-foreground uppercase tracking-wider text-xs">Pricing & Inventory</h3>
+              </div>
+              <div className="flex items-center gap-2">
+                <input 
+                  type="checkbox" 
+                  id="hasVariants"
+                  name="hasVariants"
+                  checked={hasVariants}
+                  onChange={(e) => setHasVariants(e.target.checked)}
+                  className="h-4 w-4 rounded border-border text-primary focus:ring-primary"
+                />
+                <label htmlFor="hasVariants" className="text-sm font-semibold text-foreground cursor-pointer">
+                  Product has multiple variants
+                </label>
+              </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-muted mb-1.5">Base Price (₹)</label>
-                <div className="relative">
-                  <IndianRupee className="absolute left-3 top-3 h-4 w-4 text-muted/50" />
+            {!hasVariants ? (
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-muted mb-1.5">Base Price (₹)</label>
+                  <div className="relative">
+                    <IndianRupee className="absolute left-3 top-3 h-4 w-4 text-muted/50" />
+                    <input 
+                      type="number" 
+                      name="price"
+                      value={formData.price}
+                      onChange={handleChange}
+                      placeholder="250"
+                      className="w-full rounded-xl border border-border bg-background pl-10 pr-4 py-2.5 text-sm outline-none focus:border-primary transition-all"
+                      required={!hasVariants}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-muted mb-1.5">Discount (%)</label>
+                  <div className="relative">
+                    <Percent className="absolute left-3 top-3 h-4 w-4 text-muted/50" />
+                    <input 
+                      type="number" 
+                      name="discountPercent"
+                      value={formData.discountPercent}
+                      onChange={handleChange}
+                      placeholder="10"
+                      className="w-full rounded-xl border border-border bg-background pl-10 pr-4 py-2.5 text-sm outline-none focus:border-primary transition-all"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-muted mb-1.5">Current Stock</label>
+                  <div className="relative">
+                    <Box className="absolute left-3 top-3 h-4 w-4 text-muted/50" />
+                    <input 
+                      type="number" 
+                      name="stockQuantity"
+                      value={formData.stockQuantity}
+                      onChange={handleChange}
+                      placeholder="100"
+                      className="w-full rounded-xl border border-border bg-background pl-10 pr-4 py-2.5 text-sm outline-none focus:border-primary transition-all"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-muted mb-1.5">Quantity / Unit</label>
                   <input 
-                    type="number" 
-                    name="price"
-                    value={formData.price}
+                    type="text" 
+                    name="unit"
+                    value={formData.unit}
                     onChange={handleChange}
-                    placeholder="250"
-                    className="w-full rounded-xl border border-border bg-background pl-10 pr-4 py-2.5 text-sm outline-none focus:border-primary transition-all"
-                    required
+                    placeholder="e.g. 500 gm, 1 kg"
+                    className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm outline-none focus:border-primary transition-all"
                   />
                 </div>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-muted mb-1.5">Discount (%)</label>
-                <div className="relative">
-                  <Percent className="absolute left-3 top-3 h-4 w-4 text-muted/50" />
-                  <input 
-                    type="number" 
-                    name="discountPercent"
-                    value={formData.discountPercent}
-                    onChange={handleChange}
-                    placeholder="10"
-                    className="w-full rounded-xl border border-border bg-background pl-10 pr-4 py-2.5 text-sm outline-none focus:border-primary transition-all"
-                  />
+            ) : (
+              <div className="space-y-4">
+                <div className="overflow-x-auto rounded-xl border border-border bg-background">
+                  <table className="w-full text-left border-collapse text-sm">
+                    <thead>
+                      <tr className="border-b border-border bg-muted/20">
+                        <th className="px-4 py-3 font-semibold text-muted">Quantity / Unit *</th>
+                        <th className="px-4 py-3 font-semibold text-muted">Price (₹) *</th>
+                        <th className="px-4 py-3 font-semibold text-muted">Discount %</th>
+                        <th className="px-4 py-3 font-semibold text-muted">Stock</th>
+                        <th className="px-4 py-3 font-semibold text-muted">Stock Out</th>
+                        <th className="px-4 py-3 font-semibold text-muted text-right">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-border">
+                      {variants.map((v, idx) => (
+                        <tr key={v.id} className="hover:bg-muted/5 transition-colors">
+                          <td className="px-4 py-2.5">
+                            <input 
+                              type="text"
+                              value={v.unit}
+                              onChange={(e) => {
+                                const newVars = [...variants];
+                                newVars[idx].unit = e.target.value;
+                                setVariants(newVars);
+                              }}
+                              placeholder="e.g. 500 gm"
+                              className="w-full rounded-lg border border-border bg-surface px-3 py-1.5 outline-none focus:border-primary"
+                              required
+                            />
+                          </td>
+                          <td className="px-4 py-2.5">
+                            <input 
+                              type="number"
+                              value={v.price}
+                              onChange={(e) => {
+                                const newVars = [...variants];
+                                newVars[idx].price = e.target.value;
+                                setVariants(newVars);
+                              }}
+                              placeholder="120"
+                              className="w-full rounded-lg border border-border bg-surface px-3 py-1.5 outline-none focus:border-primary"
+                              required
+                            />
+                          </td>
+                          <td className="px-4 py-2.5">
+                            <input 
+                              type="number"
+                              value={v.discountPercent}
+                              onChange={(e) => {
+                                const newVars = [...variants];
+                                newVars[idx].discountPercent = e.target.value;
+                                setVariants(newVars);
+                              }}
+                              placeholder="0"
+                              className="w-20 rounded-lg border border-border bg-surface px-3 py-1.5 outline-none focus:border-primary"
+                            />
+                          </td>
+                          <td className="px-4 py-2.5">
+                            <input 
+                              type="number"
+                              value={v.stockQuantity}
+                              onChange={(e) => {
+                                const newVars = [...variants];
+                                newVars[idx].stockQuantity = e.target.value;
+                                setVariants(newVars);
+                              }}
+                              placeholder="100"
+                              className="w-20 rounded-lg border border-border bg-surface px-3 py-1.5 outline-none focus:border-primary"
+                            />
+                          </td>
+                          <td className="px-4 py-2.5">
+                            <input 
+                              type="checkbox"
+                              checked={v.isStockOut}
+                              onChange={(e) => {
+                                const newVars = [...variants];
+                                newVars[idx].isStockOut = e.target.checked;
+                                setVariants(newVars);
+                              }}
+                              className="h-4 w-4 rounded border-border text-primary focus:ring-primary"
+                            />
+                          </td>
+                          <td className="px-4 py-2.5 text-right">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (variants.length === 1) return;
+                                setVariants(variants.filter((_, i) => i !== idx));
+                              }}
+                              disabled={variants.length === 1}
+                              className="p-1.5 rounded-lg border border-red-500/20 text-red-500 hover:bg-red-500/10 disabled:opacity-30 transition-colors"
+                            >
+                              <X size={16} />
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setVariants([...variants, {
+                      id: "var_" + Date.now() + "_" + Math.random().toString(36).substr(2, 5),
+                      unit: "",
+                      price: "",
+                      discountPercent: "0",
+                      stockQuantity: "100",
+                      isStockOut: false
+                    }]);
+                  }}
+                  className="flex items-center gap-1.5 rounded-xl border border-dashed border-border hover:border-primary hover:bg-primary/5 px-4 py-2.5 text-sm font-semibold text-muted hover:text-primary transition-all w-full justify-center"
+                >
+                  <Plus className="h-4 w-4" /> Add Size Variant
+                </button>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-muted mb-1.5">Current Stock</label>
-                <div className="relative">
-                  <Box className="absolute left-3 top-3 h-4 w-4 text-muted/50" />
-                  <input 
-                    type="number" 
-                    name="stockQuantity"
-                    value={formData.stockQuantity}
-                    onChange={handleChange}
-                    placeholder="100"
-                    className="w-full rounded-xl border border-border bg-background pl-10 pr-4 py-2.5 text-sm outline-none focus:border-primary transition-all"
-                  />
-                </div>
-              </div>
-            </div>
+            )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
               <div className="flex items-center gap-2">
@@ -361,24 +624,26 @@ export default function EditProductPage() {
                   onChange={handleChange}
                   className="h-4 w-4 rounded border-border text-primary focus:ring-primary"
                 />
-                <label htmlFor="isVeg" className="text-sm font-medium text-foreground">
+                <label htmlFor="isVeg" className="text-sm font-medium text-foreground cursor-pointer">
                   Vegetarian Product (Veg)
                 </label>
               </div>
 
-              <div className="flex items-center gap-2">
-                <input 
-                  type="checkbox" 
-                  id="isStockOut"
-                  name="isStockOut"
-                  checked={formData.isStockOut}
-                  onChange={handleChange}
-                  className="h-4 w-4 rounded border-border text-primary focus:ring-primary"
-                />
-                <label htmlFor="isStockOut" className="text-sm font-medium text-foreground">
-                  Mark as "Out of Stock"
-                </label>
-              </div>
+              {!hasVariants && (
+                <div className="flex items-center gap-2">
+                  <input 
+                    type="checkbox" 
+                    id="isStockOut"
+                    name="isStockOut"
+                    checked={formData.isStockOut}
+                    onChange={handleChange}
+                    className="h-4 w-4 rounded border-border text-primary focus:ring-primary"
+                  />
+                  <label htmlFor="isStockOut" className="text-sm font-medium text-foreground cursor-pointer">
+                    Mark as "Out of Stock"
+                  </label>
+                </div>
+              )}
             </div>
           </div>
         </div>

@@ -15,7 +15,9 @@ import {
   LogOut,
   Store,
   UserCheck,
-  GripVertical
+  GripVertical,
+  LifeBuoy,
+  Layers
 } from "lucide-react";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -32,6 +34,8 @@ const navItems = [
   { label: "Customers", href: "/customers", icon: Users },
   { label: "Orders", href: "/orders", icon: ShoppingCart },
   { label: "Products", href: "/products", icon: Package },
+  { label: "Categories", href: "/categories", icon: Layers },
+  { label: "Support Tickets", href: "/support", icon: LifeBuoy },
   { label: "System Settings", href: "/delivery", icon: Settings },
 ];
 

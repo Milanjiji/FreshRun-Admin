@@ -63,14 +63,43 @@ export default function EditStorePage() {
 
   const [isMapOpen, setIsMapOpen] = useState(false);
 
-  const categories = [
+  const [categories, setCategories] = useState<any[]>([
     { id: "restaurants", name: "Restaurants", icon: "🍴" },
     { id: "street-food", name: "Street Food", icon: "🍱" },
     { id: "groceries", name: "Groceries", icon: "🛒" },
     { id: "chicken", name: "Chicken", icon: "🍗" },
     { id: "fish", name: "Fish", icon: "🐟" },
     { id: "medicine", name: "Medicine", icon: "💊" }
-  ];
+  ]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
+        const response = await fetch(`${baseUrl}/categories`);
+        const data = await response.json();
+        if (data.success && Array.isArray(data.data)) {
+          const iconMap: Record<string, string> = {
+            "restaurants": "🍴",
+            "street-food": "🍱",
+            "groceries": "🛒",
+            "chicken": "🍗",
+            "fish": "🐟",
+            "medicine": "💊"
+          };
+          const formatted = data.data.map((cat: any) => ({
+            id: cat.slug,
+            name: cat.name,
+            icon: iconMap[cat.slug] || "📁"
+          }));
+          setCategories(formatted);
+        }
+      } catch (err) {
+        console.error("Failed to fetch store categories", err);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   useEffect(() => {
     const fetchStore = async () => {

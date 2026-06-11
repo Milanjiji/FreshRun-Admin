@@ -439,6 +439,12 @@ export default function OrdersPage() {
                         <span className="text-muted">Delivery Fee:</span>
                         <span className="font-medium">₹{parseFloat(selectedOrder.delivery_fee || "0").toFixed(2)}</span>
                      </div>
+                     {parseFloat((selectedOrder as any).extra_store_charge || "0") > 0 && (
+                        <div className="flex justify-between text-indigo-600 dark:text-indigo-400 font-medium">
+                           <span>Extra Store Charge:</span>
+                           <span>₹{parseFloat((selectedOrder as any).extra_store_charge).toFixed(2)}</span>
+                        </div>
+                     )}
                      {parseFloat(selectedOrder.handling_fee || "0") > 0 && (
                         <div className="flex justify-between">
                            <span className="text-muted">Handling Fee:</span>

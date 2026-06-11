@@ -120,6 +120,11 @@ export default function ProductsPage() {
                       </div>
                       <div>
                         <p className="font-bold text-foreground font-mont">{product.name}</p>
+                        {Array.isArray(product.variants) && product.variants.length > 0 ? (
+                          <p className="text-xs font-bold text-primary mb-1">{product.variants.length} Variants</p>
+                        ) : product.unit ? (
+                          <p className="text-xs text-muted font-medium mb-1">{product.unit}</p>
+                        ) : null}
                         <span className="inline-flex items-center rounded-md bg-indigo-500/10 px-1.5 py-0.5 text-[10px] font-bold text-indigo-500 uppercase tracking-wider">
                           {product.category}
                         </span>
