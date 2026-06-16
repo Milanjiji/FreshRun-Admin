@@ -17,7 +17,8 @@ import {
   UserCheck,
   GripVertical,
   LifeBuoy,
-  Layers
+  Layers,
+  Wallet
 } from "lucide-react";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -31,6 +32,7 @@ const navItems = [
   { label: "Stores", href: "/stores", icon: Store },
   { label: "Store Owners", href: "/store-owners", icon: UserCheck },
   { label: "Delivery Partners", href: "/delivery-partners", icon: Truck },
+  { label: "Withdrawals", href: "/withdrawal-requests", icon: Wallet },
   { label: "Customers", href: "/customers", icon: Users },
   { label: "Orders", href: "/orders", icon: ShoppingCart },
   { label: "Products", href: "/products", icon: Package },
