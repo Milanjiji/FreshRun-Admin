@@ -18,7 +18,8 @@ import {
   GripVertical,
   LifeBuoy,
   Layers,
-  Wallet
+  Wallet,
+  ImageIcon
 } from "lucide-react";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -29,6 +30,7 @@ function cn(...inputs: ClassValue[]) {
 
 const navItems = [
   { label: "Dashboard", href: "/", icon: LayoutDashboard },
+  { label: "Banners", href: "/banners", icon: ImageIcon },
   { label: "Stores", href: "/stores", icon: Store },
   { label: "Store Owners", href: "/store-owners", icon: UserCheck },
   { label: "Delivery Partners", href: "/delivery-partners", icon: Truck },
@@ -111,7 +113,7 @@ export default function Sidebar() {
       )}
       style={{ width: `${width}px` }}
     >
-      <div className="flex h-full flex-col px-4 py-6 overflow-hidden">
+      <div className="flex h-full flex-col px-4 py-6 overflow-y-auto overflow-x-hidden custom-scrollbar">
         {/* Logo Section */}
         <div className={cn(
           "mb-10 flex items-center gap-3 px-2 transition-all",
@@ -156,7 +158,7 @@ export default function Sidebar() {
         )}
 
         {/* Navigation */}
-        <nav className="space-y-1 overflow-y-auto max-h-[50vh] pr-2 custom-scrollbar">
+        <nav className="space-y-1 pr-2">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             return (
