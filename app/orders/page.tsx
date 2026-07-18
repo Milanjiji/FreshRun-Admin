@@ -42,6 +42,10 @@ interface OrderData {
   store_lng?: string;
   rainy_surge_fee?: string;
   payment_mode?: string;
+  delivery_partner_id?: string;
+  delivery_partner_name?: string;
+  delivery_partner_phone?: string;
+  delivery_status?: string;
 }
 
 export default function OrdersPage() {
@@ -370,11 +374,26 @@ export default function OrdersPage() {
                           />
                        </div>
                        <div className="flex items-center justify-between p-2 bg-surface rounded-lg border border-border">
+                          <span className="text-sm font-medium">Handed to Rider</span>
+                          <input 
+                            type="checkbox" 
+                            checked={localOrderState.is_given_to_delivery_boy} 
+                            onChange={(e) => handleLocalChange({ 
+                              is_given_to_delivery_boy: e.target.checked, 
+                              status: e.target.checked ? 'out_for_delivery' : 'packed' 
+                            })}
+                            className="w-4 h-4 text-primary"
+                          />
+                       </div>
+                       <div className="flex items-center justify-between p-2 bg-surface rounded-lg border border-border">
                           <span className="text-sm font-medium">Completed / Delivered</span>
                           <input 
                             type="checkbox" 
                             checked={localOrderState.is_completed} 
-                            onChange={(e) => handleLocalChange({ is_completed: e.target.checked, status: e.target.checked ? 'delivered' : (localOrderState.delivery_boy_opted ? 'confirmed' : 'packed') })}
+                            onChange={(e) => handleLocalChange({ 
+                              is_completed: e.target.checked, 
+                              status: e.target.checked ? 'delivered' : (localOrderState.is_given_to_delivery_boy ? 'out_for_delivery' : (localOrderState.delivery_boy_opted ? 'confirmed' : 'packed')) 
+                            })}
                             className="w-4 h-4 text-primary"
                           />
                        </div>
@@ -497,6 +516,38 @@ export default function OrdersPage() {
                         )}
                      </div>
                   </div>
+               </div>
+
+               {/* Delivery Partner Details */}
+               <div className="space-y-3">
+                 <h4 className="text-sm font-bold font-mont uppercase tracking-widest text-muted border-b border-border pb-2">Delivery Partner</h4>
+                 {selectedOrder.delivery_partner_id ? (
+                    <div className="flex gap-2 p-3 rounded-xl bg-blue-500/5 dark:bg-blue-500/10 border border-blue-500/20">
+                       <Truck size={16} className="text-blue-600 dark:text-blue-400 mt-1" />
+                       <div className="space-y-1">
+                          <p className="font-bold text-sm text-blue-800 dark:text-blue-300">{selectedOrder.delivery_partner_name || 'Assigned Rider'}</p>
+                          {selectedOrder.delivery_partner_phone && (
+                            <p className="text-xs text-muted">
+                               Phone: <span className="font-semibold text-foreground">{selectedOrder.delivery_partner_phone}</span>
+                            </p>
+                          )}
+                          {selectedOrder.delivery_status && (
+                            <p className="text-xs text-muted capitalize">
+                               Status: <span className="font-semibold text-foreground">{selectedOrder.delivery_status.replace('_', ' ')}</span>
+                            </p>
+                          )}
+                          <p className="text-[10px] font-mono text-blue-700 dark:text-blue-400">ID: {selectedOrder.delivery_partner_id}</p>
+                       </div>
+                    </div>
+                 ) : (
+                    <div className="flex gap-2 p-3 rounded-xl bg-gray-500/5 dark:bg-gray-500/10 border border-gray-500/20">
+                       <Truck size={16} className="text-gray-500 mt-1" />
+                       <div>
+                          <p className="font-bold text-sm text-gray-500">Not Assigned Yet</p>
+                          <p className="text-xs text-muted mt-0.5">No delivery partner is currently assigned to this order.</p>
+                       </div>
+                    </div>
+                 )}
                </div>
 
               {/* Delivery Address */}
