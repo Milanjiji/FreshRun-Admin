@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Truck, Moon, Clock, IndianRupee, Save, Loader2, Info, MapPin, CloudRain, Navigation } from "lucide-react";
+import { Truck, Moon, Clock, IndianRupee, Save, Loader2, Info, MapPin, CloudRain, Navigation, Wallet } from "lucide-react";
 
 export default function DeliverySettingsPage() {
   const [settings, setSettings] = useState<any>(null);
@@ -102,7 +102,7 @@ export default function DeliverySettingsPage() {
                   type="number"
                   step="0.1"
                   className="w-full pl-10 pr-4 py-3 bg-background border border-border rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary text-foreground outline-none transition-all"
-                  value={settings?.global_max_delivery_radius || 10}
+                  value={settings?.global_max_delivery_radius ?? 10}
                   onChange={(e) => setSettings({ ...settings, global_max_delivery_radius: parseFloat(e.target.value) })}
                 />
               </div>
@@ -117,7 +117,7 @@ export default function DeliverySettingsPage() {
                   type="number"
                   step="0.1"
                   className="w-full pl-10 pr-4 py-3 bg-background border border-border rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary text-foreground outline-none transition-all"
-                  value={settings?.base_delivery_radius || 5}
+                  value={settings?.base_delivery_radius ?? 5}
                   onChange={(e) => setSettings({ ...settings, base_delivery_radius: parseFloat(e.target.value) })}
                 />
               </div>
@@ -146,7 +146,7 @@ export default function DeliverySettingsPage() {
                 <input 
                   type="number"
                   className="w-full pl-8 pr-4 py-3 bg-background border border-border rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary text-foreground outline-none transition-all"
-                  value={settings?.min_delivery_fee || 30}
+                  value={settings?.min_delivery_fee ?? 30}
                   onChange={(e) => setSettings({ ...settings, min_delivery_fee: parseFloat(e.target.value) })}
                 />
               </div>
@@ -159,7 +159,7 @@ export default function DeliverySettingsPage() {
                 <input 
                   type="number"
                   className="w-full pl-8 pr-4 py-3 bg-background border border-border rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary text-foreground outline-none transition-all"
-                  value={settings?.per_km_extra_charge || 10}
+                  value={settings?.per_km_extra_charge ?? 10}
                   onChange={(e) => setSettings({ ...settings, per_km_extra_charge: parseFloat(e.target.value) })}
                 />
               </div>
@@ -173,7 +173,7 @@ export default function DeliverySettingsPage() {
                 <input 
                   type="number"
                   className="w-full pl-8 pr-4 py-3 bg-background border border-border rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary text-foreground outline-none transition-all"
-                  value={settings?.free_delivery_threshold || 500}
+                  value={settings?.free_delivery_threshold ?? 500}
                   onChange={(e) => setSettings({ ...settings, free_delivery_threshold: parseFloat(e.target.value) })}
                 />
               </div>
@@ -247,7 +247,7 @@ export default function DeliverySettingsPage() {
                   <input 
                     type="number"
                     className="w-full pl-8 pr-4 py-3 bg-background border border-border rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary text-foreground outline-none transition-all"
-                    value={settings?.rainy_condition_fee || 20}
+                    value={settings?.rainy_condition_fee ?? 20}
                     onChange={(e) => setSettings({ ...settings, rainy_condition_fee: parseFloat(e.target.value) })}
                   />
                 </div>
@@ -262,11 +262,49 @@ export default function DeliverySettingsPage() {
                   <input 
                     type="number"
                     className="w-full pl-8 pr-4 py-3 bg-background border border-border rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary text-foreground outline-none transition-all"
-                    value={settings?.late_night_fee || 10}
+                    value={settings?.late_night_fee ?? 10}
                     onChange={(e) => setSettings({ ...settings, late_night_fee: parseFloat(e.target.value) })}
                   />
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 4. Payment Methods */}
+        <div className="bg-surface rounded-3xl p-8 shadow-sm border border-border">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="p-3 bg-emerald-500/10 rounded-2xl">
+              <Wallet className="h-6 w-6 text-emerald-500" />
+            </div>
+            <div>
+              <h2 className="text-xl font-bold text-foreground">Payment Methods</h2>
+              <p className="text-sm text-muted">Control available checkout options</p>
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            {/* COD Toggle */}
+            <div className="flex items-center justify-between p-4 bg-emerald-500/5 rounded-2xl border border-emerald-500/10">
+              <div className="flex items-center gap-3">
+                <Wallet className={settings?.cod_enabled !== false ? "text-emerald-500" : "text-muted/40"} size={20} />
+                <div>
+                  <p className="text-sm font-bold">Cash on Delivery (COD)</p>
+                  <p className="text-[10px] text-muted">When OFF, users can only pay online</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setSettings({ ...settings, cod_enabled: settings?.cod_enabled === false ? true : false })}
+                className={`w-12 h-6 rounded-full transition-colors relative ${settings?.cod_enabled !== false ? 'bg-primary' : 'bg-muted/30'}`}
+              >
+                <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${settings?.cod_enabled !== false ? 'right-1' : 'left-1'}`} />
+              </button>
+            </div>
+
+            <div className="p-4 bg-background rounded-2xl border border-border">
+              <p className="text-xs text-muted leading-relaxed">
+                <span className="font-bold text-foreground">Online Payment</span> is always available and cannot be disabled. Disabling COD forces all users (including self-pickup) to pay via Razorpay (UPI, Card, Wallet).
+              </p>
             </div>
           </div>
         </div>
