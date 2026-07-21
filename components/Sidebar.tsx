@@ -19,7 +19,9 @@ import {
   LifeBuoy,
   Layers,
   Wallet,
-  ImageIcon
+  ImageIcon,
+  Activity,
+  Tag
 } from "lucide-react";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -40,6 +42,8 @@ const navItems = [
   { label: "Products", href: "/products", icon: Package },
   { label: "Categories", href: "/categories", icon: Layers },
   { label: "Support Tickets", href: "/support", icon: LifeBuoy },
+  { label: "Activity Log", href: "/activity", icon: Activity },
+  { label: "Pricing & Charges", href: "/pricing", icon: Tag },
   { label: "System Settings", href: "/delivery", icon: Settings },
 ];
 
